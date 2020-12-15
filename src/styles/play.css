@@ -177,25 +177,38 @@ body {
   background: #b3d3e9;
 }
 
+/* MOUNTAINS */
+
+.mountains {
+  position: absolute;
+  bottom: -48%;
+  left: 2%;
+  width: 100%;
+  height: 100%;
+  background-size: 100%;
+  z-index: 1;
+  background: url('/raindrops/assets/images/svg/mountains.svg') no-repeat;
+}
+
 /* WAVES */
 
 .wave {
-  background: url(/raindrops/assets/images/svg/wave.svg) repeat-x;
   position: absolute;
   bottom: -25px;
   width: 5000px;
   height: 15%;
+  z-index: 2;
   animation: wave 7s cubic-bezier(0.36, 0.45, 0.63, 0.53) infinite;
   transform: translate3d(0, 0, 0);
-  z-index: 2;
+  background: url('/raindrops/assets/images/svg/wave.svg') repeat-x;
 }
 
 .wave-2 {
   bottom: -30px;
+  z-index: 2;
   animation: wave 7s cubic-bezier(0.36, 0.45, 0.63, 0.53) -0.125s infinite,
     swell 7s ease -1.25s infinite;
   opacity: 1;
-  z-index: 2;
 }
 
 @keyframes wave {
