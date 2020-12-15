@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/raindrops/src/styles/play.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <title>Raindrops</title>
+  </head>
+  <body>
+    <div class="game-container">
+      <div class="game-field"></div>
+      <div class="game-control">
+        <div class="wrapper-score">
+          <p>Score: <span class="score">0</span></p>
+          <p>Best score: <span class="best-score">0</span></p>
+        </div>
+        <div class="wrapper-control">
+          <div class="display">
+            <input
+              disabled
+              type="text"
+              id="display"
+              class="display-input"
+              maxlength="3"
+            />
+          </div>
+          <div class="wrapper-numbers">
+            <button data-num="7" class="number btn">7</button>
+            <button data-num="8" class="number btn">8</button>
+            <button data-num="9" class="number btn">9</button>
+            <button data-num="clear" class="operation btn btn-equal">clear</button>
+            <button data-num="4" class="number btn">4</button>
+            <button data-num="5" class="number btn">5</button>
+            <button data-num="6" class="number btn">6</button>
+            <button data-num="1" class="number btn">1</button>
+            <button data-num="2" class="number btn">2</button>
+            <button data-num="3" class="number btn">3</button>
+            <button data-num="enter" class="operation btn btn-equal">enter</button>
+            <button data-num="0" class="number btn btn-long">0</button>
+            <button data-num="delete" class="operation btn">delete</button>
+          </div>
+        </div>
+        <button id="sound" class="btn-control">♫</button>
+        <button id="fullscreen" class="btn-control">⛶</button>
+      </div>
+    </div>
+    <script src="/raindrops/src/scripts/play.js"></script>
+  </body>
+</html>
