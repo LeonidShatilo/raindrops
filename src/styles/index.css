@@ -11,7 +11,7 @@
 
 .container {
   position: relative;
-  max-width: 1020px;
+  max-width: 1024px;
   height: 100vh;
   margin: 0 auto;
   text-align: center;
@@ -19,7 +19,7 @@
 }
 
 .wrapper-info {
-  max-width: 1020px;
+  max-width: 1024px;
   height: 25vh;
   margin: 0 auto;
 }
@@ -99,7 +99,7 @@ h2 {
 }
 
 .wrapper-button {
-  max-width: 1020px;
+  max-width: 1024px;
   min-height: 15vh;
   margin: 0 auto;
 }
