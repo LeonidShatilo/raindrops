@@ -1,0 +1,154 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.body {
+  font-size: 10px;
+  font-family: 'Fredoka One', cursive;
+}
+
+.container {
+  position: relative;
+  max-width: 1020px;
+  height: 100vh;
+  margin: 0 auto;
+  text-align: center;
+  background: radial-gradient(#c5ddf1, #94b6d1);
+}
+
+.wrapper-info {
+  max-width: 1020px;
+  height: 25vh;
+  margin: 0 auto;
+}
+
+h1 {
+  padding: 1rem 3rem 0.5rem;
+  font-size: 7em;
+  letter-spacing: 0.2rem;
+  font-family: 'Fredoka One', cursive;
+  text-transform: uppercase;
+  -webkit-background-clip: text;
+  -moz-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  background-color: #005e9d;
+  text-shadow: 0px 3px 3px rgba(255, 255, 255, 0.5);
+  user-select: none;
+}
+
+h2 {
+  padding: 0 3rem 0;
+  font-size: 1.5em;
+  font-family: 'Lato', sans-serif;
+  color: #5b96be;
+  user-select: none;
+}
+
+.wrapper-drops {
+  position: relative;
+  max-width: 1020px;
+  min-height: 60vh;
+  margin: 0 auto;
+}
+
+.drop-left {
+  position: absolute;
+  width: 7vw;
+  height: 22vh;
+  top: 5%;
+  left: 25%;
+  background-size: 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-image: url('/raindrops/assets/images/png/drop.png');
+  opacity: 0.8;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.drop-center {
+  position: absolute;
+  width: 19vw;
+  height: 60vh;
+  top: 0%;
+  left: 35%;
+  background-size: 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-image: url('/raindrops/assets/images/png/main-drop.png');
+  z-index: 3;
+  pointer-events: none;
+}
+
+.drop-right {
+  position: absolute;
+  width: 5vw;
+  height: 15vh;
+  top: 30%;
+  left: 67%;
+  background-size: 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-image: url('/raindrops/assets/images/png/drop.png');
+  opacity: 0.6;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.wrapper-button {
+  max-width: 1020px;
+  min-height: 15vh;
+  margin: 0 auto;
+}
+
+button {
+  max-width: 25%;
+  max-height: 5%;
+  padding: 1rem;
+  margin: 1rem 0.5rem;
+  border: 4px solid #5b96be;
+  border-radius: 10px;
+  font-family: 'Fredoka One', cursive;
+  font-size: 2em;
+  color: #5b96be;
+  background: none;
+  outline: none;
+  user-select: none;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+#tutorial:hover {
+  color: white;
+  background: #ffa500;
+  border: 4px solid #ff8000;
+}
+
+#play:hover {
+  color: white;
+  background: #ff0000;
+  border: 4px solid #c30000;
+}
+
+#fullscreen {
+  position: absolute;
+  padding: 0.2rem 1rem;
+  max-width: 10%;
+  max-height: 10%;
+  right: 2%;
+  font-size: 3em;
+  font-weight: bold;
+}
+
+#fullscreen:hover {
+  color: white;
+  background: #96adca;
+  border: 4px solid #758faf;
+}
+
+button:active {
+  transform: scale(0.95);
+}
