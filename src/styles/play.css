@@ -176,3 +176,45 @@ body {
   color: white;
   background: #b3d3e9;
 }
+
+/* WAVES */
+
+.wave {
+  background: url(/raindrops/assets/images/svg/wave.svg) repeat-x;
+  position: absolute;
+  bottom: -25px;
+  width: 5000px;
+  height: 15%;
+  animation: wave 7s cubic-bezier(0.36, 0.45, 0.63, 0.53) infinite;
+  transform: translate3d(0, 0, 0);
+  z-index: 2;
+}
+
+.wave-2 {
+  bottom: -30px;
+  animation: wave 7s cubic-bezier(0.36, 0.45, 0.63, 0.53) -0.125s infinite,
+    swell 7s ease -1.25s infinite;
+  opacity: 1;
+  z-index: 2;
+}
+
+@keyframes wave {
+  0% {
+    margin-left: 0;
+  }
+
+  100% {
+    margin-left: -1280px;
+  }
+}
+
+@keyframes swell {
+  0%,
+  100% {
+    transform: translate3d(0, -25px, 0);
+  }
+
+  50% {
+    transform: translate3d(0, 5px, 0);
+  }
+}
