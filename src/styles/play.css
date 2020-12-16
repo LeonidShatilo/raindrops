@@ -97,7 +97,7 @@ body {
   user-select: none;
 }
 
-.wrapper-numbers {
+.wrapper-keyboard {
   display: grid;
   grid-template-rows: repeat(4, 25%);
   grid-template-columns: repeat(4, 25%);
@@ -181,13 +181,13 @@ body {
 
 .mountains {
   position: absolute;
-  bottom: -48%;
-  left: 2%;
+  bottom: -58%;
   width: 100%;
   height: 100%;
   background-size: 100%;
   z-index: 1;
-  background: url('/raindrops/assets/images/svg/mountains.svg') no-repeat;
+  background-image: url('/raindrops/assets/images/svg/mountains.svg');
+  background-repeat: no-repeat;
 }
 
 /* WAVES */
@@ -200,7 +200,8 @@ body {
   z-index: 2;
   animation: wave 7s cubic-bezier(0.36, 0.45, 0.63, 0.53) infinite;
   transform: translate3d(0, 0, 0);
-  background: url('/raindrops/assets/images/svg/wave.svg') repeat-x;
+  background-image: url('/raindrops/assets/images/svg/wave.svg');
+  background-repeat: repeat-x;
 }
 
 .wave-2 {
@@ -208,7 +209,6 @@ body {
   z-index: 2;
   animation: wave 7s cubic-bezier(0.36, 0.45, 0.63, 0.53) -0.125s infinite,
     swell 7s ease -1.25s infinite;
-  opacity: 1;
 }
 
 @keyframes wave {
@@ -230,4 +230,39 @@ body {
   50% {
     transform: translate3d(0, 5px, 0);
   }
+}
+
+/* DROP */
+
+.operator {
+  position: absolute;
+  top: 44%;
+  left: 17%;
+  font-size: 2.5rem;
+  color: #004d60;
+}
+
+.operand {
+  position: relative;
+  top: 15%;
+  left: 7%;
+  color: #004d60;
+}
+
+.drop {
+  position: absolute;
+  top: 20%;
+  left: 25%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100px;
+  height: 142px;
+  font-size: 1.7rem;
+  font-weight: bold;
+  z-index: 1;
+  background-size: 100%;
+  background-image: url('/raindrops/assets/images/svg/drop.svg');
+  background-repeat: no-repeat;
 }
