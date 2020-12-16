@@ -1,5 +1,15 @@
 const display = document.getElementById('display');
 const keyboard = document.querySelector('.wrapper-keyboard');
+const gameField = document.querySelector('.game-field');
+const wave = document.querySelector('.wave');
+
+const animationDuration = 7000; // Продолжительность анимации
+
+// Минимальное и максимальное значение для случайного положения капли
+const randomPositionValue = {
+  min: 0,
+  max: 85,
+};
 
 let enteredResult; // Введённый результат
 
@@ -54,3 +64,50 @@ keyboard.onclick = function (event) {
     enterOperation(operation);
   }
 };
+
+// Функция для появляения капли из случайного места по горизонтали
+function dropRandomPosition(
+  min = randomPositionValue.min,
+  max = randomPositionValue.max
+) {
+  return Math.floor(Math.random() * (max - min) + min);
+}
+
+// Функция для определения расстояния до волны
+function findDistanceToWave() {
+  let touchСorrection = 70; // Корректировка касания волны
+  return gameField.offsetHeight - wave.offsetHeight - touchСorrection;
+}
+
+// Функция для анимации падения капли
+function animationFallDrop(element, duration) {
+  element.animate(
+    [
+      {
+        top: 0,
+      },
+      {
+        top: `${findDistanceToWave()}px`,
+      },
+    ],
+    duration
+  );
+}
+
+// Функция для создания капли
+function createDrop() {
+  const drop = document.createElement('div');
+  const operator = document.createElement('span');
+  const firstOperand = document.createElement('span');
+  const secondOperand = document.createElement('span');
+
+  drop.className = 'drop';
+  operator.className = 'operator';
+  firstOperand.className = 'operand';
+  secondOperand.className = 'operand';
+  drop.style.left = `${dropRandomPosition()}%`;
+  drop.append(firstOperand, operator, secondOperand);
+  gameField.append(drop);
+
+  animationFallDrop(drop, animationDuration);
+}
