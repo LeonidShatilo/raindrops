@@ -26,8 +26,12 @@ let isSoundOn = true; // Флаг для определения, должны л
 
 // Функция для обновления значения на дисплее
 function updateDisplay(number) {
-  if (display.value.length < 4) {
-    display.value += number;
+  if (display.value.length < 3) {
+    if (display.value === '' && number == 0) {
+      display.value = '';
+    } else {
+      display.value += number;
+    }
   }
 }
 
@@ -43,8 +47,9 @@ function deleteDigit() {
 
 // Функция для сохранения значения введённого результата
 function enterResult() {
-  enteredResult = display.value;
-  clearDisplay();
+  if (display.value !== '') {
+    enteredResult = display.value;
+  }
 }
 
 // Функция для ввода и обработки операций
@@ -57,7 +62,7 @@ function enterOperation(operation) {
       deleteDigit();
       break;
     case 'enter':
-      enteredResult = display.value;
+      enterResult();
       clearDisplay();
       break;
   }
@@ -73,6 +78,59 @@ keyboard.onclick = function (event) {
     enterOperation(operation);
   }
 };
+
+// Функция для использования цифрового блока на физической клавиатуре
+function useNumpad(event) {
+  if (display.value.length < 3) {
+    switch (event.code) {
+      case 'Numpad0':
+        if (display.value === '') {
+          display.value = '';
+        } else {
+          display.value += 0;
+        }
+        break;
+      case 'Numpad1':
+        display.value += 1;
+        break;
+      case 'Numpad2':
+        display.value += 2;
+        break;
+      case 'Numpad3':
+        display.value += 3;
+        break;
+      case 'Numpad4':
+        display.value += 4;
+        break;
+      case 'Numpad5':
+        display.value += 5;
+        break;
+      case 'Numpad6':
+        display.value += 6;
+        break;
+      case 'Numpad7':
+        display.value += 7;
+        break;
+      case 'Numpad8':
+        display.value += 8;
+        break;
+      case 'Numpad9':
+        display.value += 9;
+        break;
+    }
+  }
+  switch (event.code) {
+    case 'Backspace':
+      clearDisplay();
+      break;
+    case 'NumpadDecimal':
+      deleteDigit();
+      break;
+    case 'NumpadEnter':
+      enterResult();
+      clearDisplay();
+  }
+}
 
 // Функция для появления капли из случайного места по горизонтали
 function dropRandomPosition(
@@ -150,3 +208,6 @@ soundButton.addEventListener('click', () => {
     soundButton.classList.toggle('sound-off');
   }
 });
+
+// Слушаем нажатие на физическую клавиатуру
+window.addEventListener('keydown', useNumpad);
