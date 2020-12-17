@@ -10,15 +10,24 @@ const seaSound = document.querySelector('.sea-sound');
 const animationDuration = 7000; // Продолжительность анимации
 
 // Минимальное и максимальное значение для случайного положения капли
-const randomPositionValue = {
+const limitPositionValue = {
   min: 0,
   max: 85,
 };
 
 // Минимальное и максимальное значение операнда
-const randomOperandValue = {
+const limitOperandValue = {
   min: 2,
-  max: 100,
+  max: 20,
+};
+
+// Символы всех используемых операторов
+const operatorSymbol = ['+', '-', '×', '÷'];
+
+// Минимальное и максимальное значение индекса массива с операторами
+const limitIndexArrSymbol = {
+  min: 0,
+  max: operatorSymbol.length - 1,
 };
 
 let enteredResult; // Введённый результат
@@ -133,11 +142,39 @@ function useNumpad(event) {
 }
 
 // Функция для появления капли из случайного места по горизонтали
-function dropRandomPosition(
-  min = randomPositionValue.min,
-  max = randomPositionValue.max
+function setRandomDropPosition(
+  min = limitPositionValue.min,
+  max = limitPositionValue.max
 ) {
   return Math.floor(Math.random() * (max - min) + min);
+}
+
+// Функция для установки случайного значения оператора
+function setRandomOperandValue(
+  min = limitOperandValue.min,
+  max = limitOperandValue.max
+) {
+  return Math.floor(Math.random() * (max - min) + min);
+}
+
+// Функция для установки случайного оператора
+function setRandomOperator(
+  arraySymbol = operatorSymbol,
+  min = limitIndexArrSymbol.min,
+  max = limitIndexArrSymbol.max
+) {
+  let randomIndex = Math.floor(Math.random() * (max - min) + min);
+  return arraySymbol[randomIndex];
+}
+
+// Функция для заполнения капли операндами и оператором
+function fillDropValues(firstOperand, operator, secondOperand) {
+  let operatorSymbol = setRandomOperator();
+  let firstValue = setRandomOperandValue();
+  let secondValue = setRandomOperandValue();
+  operator.innerHTML = operatorSymbol;
+  firstOperand.innerHTML = firstValue;
+  secondOperand.innerHTML = secondValue;
 }
 
 // Функция для определения расстояния до волны
@@ -178,10 +215,10 @@ function createDrop() {
   operator.className = 'operator';
   firstOperand.className = 'operand';
   secondOperand.className = 'operand';
-  drop.style.left = `${dropRandomPosition()}%`;
+  drop.style.left = `${setRandomDropPosition()}%`;
   drop.append(firstOperand, operator, secondOperand);
   gameField.append(drop);
-
+  fillDropValues(firstOperand, operator, secondOperand);
   animationFallDrop(drop, animationDuration);
 }
 
@@ -211,3 +248,5 @@ soundButton.addEventListener('click', () => {
 
 // Слушаем нажатие на физическую клавиатуру
 window.addEventListener('keydown', useNumpad);
+
+createDrop();
