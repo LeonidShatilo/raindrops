@@ -2,6 +2,10 @@ const display = document.getElementById('display');
 const keyboard = document.querySelector('.wrapper-keyboard');
 const gameField = document.querySelector('.game-field');
 const wave = document.querySelector('.wave');
+const wave2 = document.querySelector('.wave-2');
+const soundButton = document.getElementById('sound');
+const rainSound = document.querySelector('.rain-sound');
+const seaSound = document.querySelector('.sea-sound');
 
 const animationDuration = 7000; // Продолжительность анимации
 
@@ -11,7 +15,14 @@ const randomPositionValue = {
   max: 85,
 };
 
+// Минимальное и максимальное значение операнда
+const randomOperandValue = {
+  min: 2,
+  max: 100,
+};
+
 let enteredResult; // Введённый результат
+let isSoundOn = true; // Флаг для определения, должны ли проигрываться фоновые звуки
 
 // Функция для обновления значения на дисплее
 function updateDisplay(number) {
@@ -57,15 +68,13 @@ keyboard.onclick = function (event) {
   let number = event.target.getAttribute('data-number');
   let operation = event.target.getAttribute('data-operation');
   if (number) {
-    console.log(number);
     updateDisplay(number);
   } else if (operation) {
-    console.log(operation);
     enterOperation(operation);
   }
 };
 
-// Функция для появляения капли из случайного места по горизонтали
+// Функция для появления капли из случайного места по горизонтали
 function dropRandomPosition(
   min = randomPositionValue.min,
   max = randomPositionValue.max
@@ -81,17 +90,23 @@ function findDistanceToWave() {
 
 // Функция для анимации падения капли
 function animationFallDrop(element, duration) {
-  element.animate(
-    [
-      {
-        top: 0,
-      },
-      {
-        top: `${findDistanceToWave()}px`,
-      },
-    ],
-    duration
-  );
+  let liftingHeight = 150; // Высота подъёма воды
+  element
+    .animate(
+      [
+        {
+          top: 0,
+        },
+        {
+          top: `${findDistanceToWave()}px`,
+        },
+      ],
+      duration
+    )
+    .finished.then(() => {
+      wave.style.height = `${wave.offsetHeight + liftingHeight}px`;
+      wave2.style.height = `${wave2.offsetHeight + liftingHeight}px`;
+    });
 }
 
 // Функция для создания капли
@@ -111,3 +126,27 @@ function createDrop() {
 
   animationFallDrop(drop, animationDuration);
 }
+
+// Функция для запуска проигрывания фоновых звуков
+function playSound() {
+  rainSound.play();
+  seaSound.play();
+}
+
+// Функция для остановки проигрывания фоновых звуков
+function pauseSound() {
+  rainSound.pause();
+  seaSound.pause();
+}
+
+// Вешаем на кнопку звука обработчик события
+soundButton.addEventListener('click', () => {
+  isSoundOn = !isSoundOn;
+  if (isSoundOn) {
+    playSound();
+    soundButton.classList.toggle('sound-off');
+  } else {
+    pauseSound();
+    soundButton.classList.toggle('sound-off');
+  }
+});
