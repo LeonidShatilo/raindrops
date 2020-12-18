@@ -284,3 +284,20 @@ body {
   background-image: url('/raindrops/assets/images/svg/drop.svg');
   background-repeat: no-repeat;
 }
+
+/* WRONG ANSWER TEXT */
+
+.wrong-answer {
+  position: absolute;
+  top: 42%;
+  left: 41%;
+  font-size: 5rem;
+  font-weight: bold;
+  color: #ff0033;
+  opacity: 0;
+  transition: 0.4s;
+}
+
+.show {
+  opacity: 1;
+}
