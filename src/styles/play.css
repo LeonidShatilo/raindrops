@@ -296,6 +296,7 @@ body {
   color: #ff0033;
   opacity: 0;
   transition: 0.4s;
+  z-index: 5;
 }
 
 .show {
