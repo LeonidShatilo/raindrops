@@ -1,6 +1,9 @@
 const display = document.getElementById('display');
 const keyboard = document.querySelector('.wrapper-keyboard');
 const gameField = document.querySelector('.game-field');
+const scoreBoard = document.querySelector('.score');
+const bestScoreBoard = document.querySelector('.best-score');
+const wrongAnswerText = document.querySelector('.wrong-answer');
 const wave = document.querySelector('.wave');
 const wave2 = document.querySelector('.wave-2');
 const soundButton = document.getElementById('sound');
@@ -17,7 +20,7 @@ const limitPositionValue = {
 
 // Минимальное и максимальное значение операнда
 const limitOperandValue = {
-  min: 2,
+  min: 1,
   max: 10,
 };
 
@@ -30,10 +33,36 @@ const limitIndexArrSymbol = {
   max: operatorSymbol.length - 1,
 };
 
+let score = 0; // Начальное значение рейтинга
+let baseChangeScore = 10; // Базовая величина изменения рейтинга
+let bestScore; // Лучший результат
+let countCorrectAnswer = 0; // Подсчёт правильных ответов
 let enteredAnswer; // Введённый ответ
 let correctAnswer; // Правильный ответ
 let isSoundOn = true; // Флаг для определения, должны ли проигрываться фоновые звуки
 let isCorrectAnswer; // Флаг для определения корректности ответа
+
+function changeScore() {
+  let timeShowWrongAnswerText = 400;
+
+  if (isCorrectAnswer) {
+    score = baseChangeScore + countCorrectAnswer;
+    scoreBoard.innerHTML = score;
+    countCorrectAnswer++;
+  } else {
+    if (score !== 0) {
+      score = -baseChangeScore - countCorrectAnswer;
+    } else {
+      score = 0;
+    }
+    scoreBoard.innerHTML = score;
+    wrongAnswerText.innerHTML = -baseChangeScore - countCorrectAnswer;
+    wrongAnswerText.classList.add('show');
+    setTimeout(() => {
+      wrongAnswerText.classList.remove('show');
+    }, timeShowWrongAnswerText);
+  }
+}
 
 function checkAnswer() {
   let firstValue = value.firstOperand;
@@ -85,6 +114,7 @@ function enterAnswer() {
     enteredAnswer = display.value;
     clearDisplay();
     checkAnswer();
+    changeScore();
   }
 }
 
@@ -221,7 +251,7 @@ function findDistanceToWave() {
 
 // Функция для анимации падения капли
 function animationFallDrop(element, duration) {
-  let liftingHeight = 150; // Высота подъёма воды
+  let liftingHeight = 50; // Высота подъёма воды
   element
     .animate(
       [
