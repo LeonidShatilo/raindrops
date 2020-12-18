@@ -9,6 +9,9 @@ const wave2 = document.querySelector('.wave-2');
 const soundButton = document.getElementById('sound');
 const rainSound = document.querySelector('.rain-sound');
 const seaSound = document.querySelector('.sea-sound');
+const correctAnswerSound = document.querySelector('.correct-answer-sound');
+const wrongAnswerSound = document.querySelector('.wrong-answer-sound');
+const fallInSeaSound = document.querySelector('.fall-in-sea-sound');
 
 const animationDuration = 7000; // Продолжительность анимации
 
@@ -46,12 +49,16 @@ function changeScore() {
   let timeShowWrongAnswerText = 400;
 
   if (isCorrectAnswer) {
-    score = baseChangeScore + countCorrectAnswer;
+    correctAnswerSound.currentTime = 0;
+    correctAnswerSound.play();
+    score = score + baseChangeScore + countCorrectAnswer;
     scoreBoard.innerHTML = score;
     countCorrectAnswer++;
   } else {
+    wrongAnswerSound.currentTime = 0;
+    wrongAnswerSound.play();
     if (score !== 0) {
-      score = -baseChangeScore - countCorrectAnswer;
+      score = score - baseChangeScore - countCorrectAnswer;
     } else {
       score = 0;
     }
@@ -90,8 +97,8 @@ function checkAnswer() {
 // Функция для обновления значения на дисплее
 function updateDisplay(number) {
   if (display.value.length < 3) {
-    if (display.value === '' && number == 0) {
-      display.value = '';
+    if (display.value == 0) {
+      display.value = number;
     } else {
       display.value += number;
     }
@@ -137,6 +144,7 @@ function enterOperation(operation) {
 keyboard.onclick = function (event) {
   let number = event.target.getAttribute('data-number');
   let operation = event.target.getAttribute('data-operation');
+
   if (number) {
     updateDisplay(number);
   } else if (operation) {
@@ -149,41 +157,78 @@ function useNumpad(event) {
   if (display.value.length < 3) {
     switch (event.code) {
       case 'Numpad0':
-        if (display.value === '') {
-          display.value = '';
+        if (display.value == 0) {
+          display.value = 0;
         } else {
           display.value += 0;
         }
         break;
       case 'Numpad1':
-        display.value += 1;
+        if (display.value == 0) {
+          display.value = 1;
+        } else {
+          display.value += 1;
+        }
         break;
       case 'Numpad2':
-        display.value += 2;
+        if (display.value == 0) {
+          display.value = 2;
+        } else {
+          display.value += 2;
+        }
         break;
       case 'Numpad3':
-        display.value += 3;
+        if (display.value == 0) {
+          display.value = 3;
+        } else {
+          display.value += 3;
+        }
         break;
       case 'Numpad4':
-        display.value += 4;
+        if (display.value == 0) {
+          display.value = 4;
+        } else {
+          display.value += 4;
+        }
         break;
       case 'Numpad5':
-        display.value += 5;
+        if (display.value == 0) {
+          display.value = 5;
+        } else {
+          display.value += 5;
+        }
         break;
       case 'Numpad6':
-        display.value += 6;
+        if (display.value == 0) {
+          display.value = 6;
+        } else {
+          display.value += 6;
+        }
         break;
       case 'Numpad7':
-        display.value += 7;
+        if (display.value == 0) {
+          display.value = 7;
+        } else {
+          display.value += 7;
+        }
         break;
       case 'Numpad8':
-        display.value += 8;
+        if (display.value == 0) {
+          display.value = 8;
+        } else {
+          display.value += 8;
+        }
         break;
       case 'Numpad9':
-        display.value += 9;
+        if (display.value == 0) {
+          display.value = 9;
+        } else {
+          display.value += 9;
+        }
         break;
     }
   }
+
   switch (event.code) {
     case 'Backspace':
       clearDisplay();
@@ -223,6 +268,7 @@ function setRandomOperator(
   max = limitIndexArrSymbol.max
 ) {
   let randomIndex = getRandomValue(min, max);
+
   return arraySymbol[randomIndex];
 }
 
@@ -238,6 +284,7 @@ function fillDropValues(firstOperand, operator, secondOperand) {
   let firstValue = value.firstOperand;
   let operatorSymbol = value.operator;
   let secondValue = value.secondOperand;
+
   firstOperand.innerHTML = firstValue;
   operator.innerHTML = operatorSymbol;
   secondOperand.innerHTML = secondValue;
@@ -246,12 +293,14 @@ function fillDropValues(firstOperand, operator, secondOperand) {
 // Функция для определения расстояния до волны
 function findDistanceToWave() {
   let touchСorrection = 70; // Корректировка касания волны
+
   return gameField.offsetHeight - wave.offsetHeight - touchСorrection;
 }
 
 // Функция для анимации падения капли
 function animationFallDrop(element, duration) {
   let liftingHeight = 50; // Высота подъёма воды
+
   element
     .animate(
       [
@@ -265,6 +314,8 @@ function animationFallDrop(element, duration) {
       duration
     )
     .finished.then(() => {
+      fallInSeaSound.currentTime = 0;
+      fallInSeaSound.play();
       wave.style.height = `${wave.offsetHeight + liftingHeight}px`;
       wave2.style.height = `${wave2.offsetHeight + liftingHeight}px`;
     });
@@ -303,6 +354,7 @@ function pauseSound() {
 // Вешаем на кнопку звука обработчик события
 soundButton.addEventListener('click', () => {
   isSoundOn = !isSoundOn;
+  
   if (isSoundOn) {
     playSound();
     soundButton.classList.toggle('sound-off');
