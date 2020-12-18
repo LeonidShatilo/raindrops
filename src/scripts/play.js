@@ -30,8 +30,33 @@ const limitIndexArrSymbol = {
   max: operatorSymbol.length - 1,
 };
 
-let enteredResult; // Введённый результат
+let enteredAnswer; // Введённый ответ
+let correctAnswer; // Правильный ответ
 let isSoundOn = true; // Флаг для определения, должны ли проигрываться фоновые звуки
+let isCorrectAnswer; // Флаг для определения корректности ответа
+
+function checkAnswer() {
+  let firstValue = value.firstOperand;
+  let operator = value.operator;
+  let secondValue = value.secondOperand;
+
+  switch (operator) {
+    case '+':
+      correctAnswer = firstValue + secondValue;
+      break;
+    case '-':
+      correctAnswer = firstValue - secondValue;
+      break;
+    case '×':
+      correctAnswer = firstValue * secondValue;
+      break;
+    case '÷':
+      correctAnswer = firstValue / secondValue;
+      break;
+  }
+
+  isCorrectAnswer = enteredAnswer == correctAnswer;
+}
 
 // Функция для обновления значения на дисплее
 function updateDisplay(number) {
@@ -55,9 +80,11 @@ function deleteDigit() {
 }
 
 // Функция для сохранения значения введённого результата
-function enterResult() {
+function enterAnswer() {
   if (display.value !== '') {
-    enteredResult = display.value;
+    enteredAnswer = display.value;
+    clearDisplay();
+    checkAnswer();
   }
 }
 
@@ -71,8 +98,7 @@ function enterOperation(operation) {
       deleteDigit();
       break;
     case 'enter':
-      enterResult();
-      clearDisplay();
+      enterAnswer();
       break;
   }
 }
@@ -136,8 +162,7 @@ function useNumpad(event) {
       deleteDigit();
       break;
     case 'NumpadEnter':
-      enterResult();
-      clearDisplay();
+      enterAnswer();
   }
 }
 
@@ -171,13 +196,20 @@ function setRandomOperator(
   return arraySymbol[randomIndex];
 }
 
+// Объект, содержащий случайные значения операндов и оператора
+const value = {
+  firstOperand: setRandomOperandValue(),
+  operator: setRandomOperator(),
+  secondOperand: setRandomOperandValue(),
+};
+
 // Функция для заполнения капли операндами и оператором
 function fillDropValues(firstOperand, operator, secondOperand) {
-  let operatorSymbol = setRandomOperator();
-  let firstValue = setRandomOperandValue();
-  let secondValue = setRandomOperandValue();
-  operator.innerHTML = operatorSymbol;
+  let firstValue = value.firstOperand;
+  let operatorSymbol = value.operator;
+  let secondValue = value.secondOperand;
   firstOperand.innerHTML = firstValue;
+  operator.innerHTML = operatorSymbol;
   secondOperand.innerHTML = secondValue;
 }
 
