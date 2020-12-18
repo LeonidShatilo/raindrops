@@ -18,7 +18,7 @@ const limitPositionValue = {
 // Минимальное и максимальное значение операнда
 const limitOperandValue = {
   min: 2,
-  max: 20,
+  max: 10,
 };
 
 // Символы всех используемых операторов
@@ -141,12 +141,16 @@ function useNumpad(event) {
   }
 }
 
+function getRandomValue(min, max) {
+  return Math.floor(Math.random() * (max - min) + min);
+}
+
 // Функция для появления капли из случайного места по горизонтали
 function setRandomDropPosition(
   min = limitPositionValue.min,
   max = limitPositionValue.max
 ) {
-  return Math.floor(Math.random() * (max - min) + min);
+  return getRandomValue(min, max);
 }
 
 // Функция для установки случайного значения оператора
@@ -154,7 +158,7 @@ function setRandomOperandValue(
   min = limitOperandValue.min,
   max = limitOperandValue.max
 ) {
-  return Math.floor(Math.random() * (max - min) + min);
+  return getRandomValue(min, max);
 }
 
 // Функция для установки случайного оператора
@@ -163,7 +167,7 @@ function setRandomOperator(
   min = limitIndexArrSymbol.min,
   max = limitIndexArrSymbol.max
 ) {
-  let randomIndex = Math.floor(Math.random() * (max - min) + min);
+  let randomIndex = getRandomValue(min, max);
   return arraySymbol[randomIndex];
 }
 
