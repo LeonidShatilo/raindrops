@@ -36,9 +36,9 @@ const limitIndexArrSymbol = {
   max: operatorSymbol.length - 1,
 };
 
-let score = 0; // Начальное значение рейтинга
+let currentScore = 0; // Текущее значение рейтинга
+let savedScore = 0; // Сохранённое значение рейтинга
 let baseChangeScore = 10; // Базовая величина изменения рейтинга
-let bestScore; // Лучший результат
 let countCorrectAnswer = 0; // Подсчёт правильных ответов
 let enteredAnswer; // Введённый ответ
 let correctAnswer; // Правильный ответ
@@ -51,18 +51,18 @@ function changeScore() {
   if (isCorrectAnswer) {
     correctAnswerSound.currentTime = 0;
     correctAnswerSound.play();
-    score = score + baseChangeScore + countCorrectAnswer;
-    scoreBoard.innerHTML = score;
+    currentScore = currentScore + baseChangeScore + countCorrectAnswer;
+    scoreBoard.innerHTML = currentScore;
     countCorrectAnswer++;
   } else {
     wrongAnswerSound.currentTime = 0;
     wrongAnswerSound.play();
-    if (score !== 0) {
-      score = score - baseChangeScore - countCorrectAnswer;
+    if (currentScore !== 0) {
+      currentScore = currentScore - baseChangeScore - countCorrectAnswer;
     } else {
-      score = 0;
+      currentScore = 0;
     }
-    scoreBoard.innerHTML = score;
+    scoreBoard.innerHTML = currentScore;
     wrongAnswerText.innerHTML = -baseChangeScore - countCorrectAnswer;
     wrongAnswerText.classList.add('show');
     setTimeout(() => {
@@ -71,6 +71,23 @@ function changeScore() {
   }
 }
 
+// Функция для получения лучшего рейтинга
+function getBestScore() {
+  if (localStorage.getItem('best-score') === null) {
+    bestScoreBoard.textContent = 0;
+  } else {
+    bestScoreBoard.textContent = localStorage.getItem('best-score');
+  }
+}
+
+// Функция для установки лучшего рейтинга
+function setBestScore() {
+  if (savedScore > Number(localStorage.getItem('best-score'))) {
+    localStorage.setItem('best-score', savedScore);
+  }
+}
+
+// Функция для проверки введённого ответа
 function checkAnswer() {
   let firstValue = value.firstOperand;
   let operator = value.operator;
@@ -241,6 +258,7 @@ function useNumpad(event) {
   }
 }
 
+// Функция для получения рандомного значения с учётом принимаемого диапазона
 function getRandomValue(min, max) {
   return Math.floor(Math.random() * (max - min) + min);
 }
@@ -354,7 +372,7 @@ function pauseSound() {
 // Вешаем на кнопку звука обработчик события
 soundButton.addEventListener('click', () => {
   isSoundOn = !isSoundOn;
-  
+
   if (isSoundOn) {
     playSound();
     soundButton.classList.toggle('sound-off');
