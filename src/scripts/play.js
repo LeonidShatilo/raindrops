@@ -12,8 +12,9 @@ const seaSound = document.querySelector('.sea-sound');
 const correctAnswerSound = document.querySelector('.correct-answer-sound');
 const wrongAnswerSound = document.querySelector('.wrong-answer-sound');
 const fallInSeaSound = document.querySelector('.fall-in-sea-sound');
+const popDropSound = document.querySelector('.pop-drop-sound');
 
-const animationDuration = 20000; // Продолжительность анимации
+const animationDuration = 17000; // Продолжительность анимации
 
 // Минимальное и максимальное значение для случайного положения капли
 const limitPositionValue = {
@@ -44,25 +45,29 @@ let enteredAnswer; // Введённый ответ
 let correctAnswer; // Правильный ответ
 let isSoundOn = true; // Флаг для определения, должны ли проигрываться фоновые звуки
 let isCorrectAnswer; // Флаг для определения корректности ответа
+let isPopping; // Флаг для определения лопания капли
 
 // Функция для изменения рейтинга
 function changeScore() {
   let timeShowWrongAnswerText = 600;
+  let addScore = currentScore + baseChangeScore + countCorrectAnswer;
+  let removeScore = currentScore - baseChangeScore - countCorrectAnswer;
 
   if (isCorrectAnswer) {
     correctAnswerSound.currentTime = 0;
     correctAnswerSound.play();
-    currentScore = currentScore + baseChangeScore + countCorrectAnswer;
+    currentScore = addScore;
     scoreBoard.innerHTML = currentScore;
     countCorrectAnswer++;
   } else {
     wrongAnswerSound.currentTime = 0;
     wrongAnswerSound.play();
-    if (currentScore !== 0) {
-      currentScore = currentScore - baseChangeScore - countCorrectAnswer;
+    if (removeScore > 0) {
+      currentScore = removeScore;
     } else {
       currentScore = 0;
     }
+
     scoreBoard.innerHTML = currentScore;
     wrongAnswerText.innerHTML = -baseChangeScore - countCorrectAnswer;
     wrongAnswerText.classList.add('show');
@@ -76,7 +81,10 @@ function changeScore() {
 function playSplashAnimation() {
   let timeShowDropSplash = 450;
 
+  isPopping = true;
   createSplash();
+  popDropSound.currentTime = 0;
+  popDropSound.play();
   setTimeout(() => {
     gameField.removeChild(document.querySelector('.splash'));
   }, timeShowDropSplash);
@@ -347,10 +355,12 @@ function animationFallDrop(dropElement, duration) {
       duration
     )
     .finished.then(() => {
-      fallInSeaSound.currentTime = 0;
-      fallInSeaSound.play();
-      wave.style.height = `${wave.offsetHeight + liftingHeight}px`;
-      wave2.style.height = `${wave2.offsetHeight + liftingHeight}px`;
+      if (!isPopping) {
+        fallInSeaSound.currentTime = 0;
+        fallInSeaSound.play();
+        wave.style.height = `${wave.offsetHeight + liftingHeight}px`;
+        wave2.style.height = `${wave2.offsetHeight + liftingHeight}px`;
+      }
     });
 }
 
@@ -375,6 +385,7 @@ function createDrop() {
   const firstOperand = document.createElement('span');
   const secondOperand = document.createElement('span');
 
+  isPopping = false;
   dropElement.className = 'drop';
   operator.className = 'operator';
   firstOperand.className = 'operand';
