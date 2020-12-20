@@ -13,7 +13,7 @@ const correctAnswerSound = document.querySelector('.correct-answer-sound');
 const wrongAnswerSound = document.querySelector('.wrong-answer-sound');
 const fallInSeaSound = document.querySelector('.fall-in-sea-sound');
 
-const animationDuration = 7000; // Продолжительность анимации
+const animationDuration = 20000; // Продолжительность анимации
 
 // Минимальное и максимальное значение для случайного положения капли
 const limitPositionValue = {
@@ -45,8 +45,9 @@ let correctAnswer; // Правильный ответ
 let isSoundOn = true; // Флаг для определения, должны ли проигрываться фоновые звуки
 let isCorrectAnswer; // Флаг для определения корректности ответа
 
+// Функция для изменения рейтинга
 function changeScore() {
-  let timeShowWrongAnswerText = 400;
+  let timeShowWrongAnswerText = 600;
 
   if (isCorrectAnswer) {
     correctAnswerSound.currentTime = 0;
@@ -69,6 +70,16 @@ function changeScore() {
       wrongAnswerText.classList.remove('show');
     }, timeShowWrongAnswerText);
   }
+}
+
+// Функция для запуска анимации брызг
+function playSplashAnimation() {
+  let timeShowDropSplash = 450;
+
+  createSplash();
+  setTimeout(() => {
+    gameField.removeChild(document.querySelector('.splash'));
+  }, timeShowDropSplash);
 }
 
 // Функция для получения лучшего рейтинга
@@ -109,6 +120,11 @@ function checkAnswer() {
   }
 
   isCorrectAnswer = enteredAnswer == correctAnswer;
+  if (isCorrectAnswer) {
+    playSplashAnimation();
+    gameField.removeChild(document.querySelector('.drop'));
+  }
+  changeScore();
 }
 
 // Функция для обновления значения на дисплее
@@ -138,7 +154,6 @@ function enterAnswer() {
     enteredAnswer = display.value;
     clearDisplay();
     checkAnswer();
-    changeScore();
   }
 }
 
@@ -316,10 +331,10 @@ function findDistanceToWave() {
 }
 
 // Функция для анимации падения капли
-function animationFallDrop(element, duration) {
+function animationFallDrop(dropElement, duration) {
   let liftingHeight = 50; // Высота подъёма воды
 
-  element
+  dropElement
     .animate(
       [
         {
@@ -339,22 +354,36 @@ function animationFallDrop(element, duration) {
     });
 }
 
+// Функция для создания брызг
+function createSplash() {
+  const drop = document.querySelector('.drop');
+  let offsetTopСorrection = 50;
+  let offsetLeftСorrection = 10;
+  let imageSplash = new Image(80, 80);
+
+  imageSplash.src = '/raindrops/assets/images/svg/splash.svg';
+  imageSplash.className = 'splash';
+  imageSplash.style.top = `${drop.offsetTop + offsetTopСorrection}px`;
+  imageSplash.style.left = `${drop.offsetLeft + offsetLeftСorrection}px`;
+  gameField.append(imageSplash);
+}
+
 // Функция для создания капли
 function createDrop() {
-  const drop = document.createElement('div');
+  const dropElement = document.createElement('div');
   const operator = document.createElement('span');
   const firstOperand = document.createElement('span');
   const secondOperand = document.createElement('span');
 
-  drop.className = 'drop';
+  dropElement.className = 'drop';
   operator.className = 'operator';
   firstOperand.className = 'operand';
   secondOperand.className = 'operand';
-  drop.style.left = `${setRandomDropPosition()}%`;
-  drop.append(firstOperand, operator, secondOperand);
-  gameField.append(drop);
+  dropElement.style.left = `${setRandomDropPosition()}%`;
+  dropElement.append(firstOperand, operator, secondOperand);
+  gameField.append(dropElement);
   fillDropValues(firstOperand, operator, secondOperand);
-  animationFallDrop(drop, animationDuration);
+  animationFallDrop(dropElement, animationDuration);
 }
 
 // Функция для запуска проигрывания фоновых звуков
