@@ -25,16 +25,7 @@ const limitPositionValue = {
 // Минимальное и максимальное значение операнда
 const limitOperandValue = {
   min: 1,
-  max: 10,
-};
-
-// Символы всех используемых операторов
-const operatorSymbol = ['+', '-', '×', '÷'];
-
-// Минимальное и максимальное значение индекса массива с операторами
-const limitIndexArrSymbol = {
-  min: 0,
-  max: operatorSymbol.length - 1,
+  max: 15,
 };
 
 let currentScore = 0; // Текущее значение рейтинга
@@ -45,7 +36,6 @@ let enteredAnswer; // Введённый ответ
 let correctAnswer; // Правильный ответ
 let isSoundOn = true; // Флаг для определения, должны ли проигрываться фоновые звуки
 let isCorrectAnswer; // Флаг для определения корректности ответа
-let isPopping; // Флаг для определения лопания капли
 
 // Функция для изменения рейтинга
 function changeScore() {
@@ -81,7 +71,6 @@ function changeScore() {
 function playSplashAnimation() {
   let timeShowDropSplash = 450;
 
-  isPopping = true;
   createSplash();
   popDropSound.currentTime = 0;
   popDropSound.play();
@@ -108,11 +97,16 @@ function setBestScore() {
 
 // Функция для проверки введённого ответа
 function checkAnswer() {
-  let firstValue = value.firstOperand;
-  let operator = value.operator;
-  let secondValue = value.secondOperand;
+  const drop = document.querySelector('.drop');
+  const firstOperand = document.querySelector('.first-operand');
+  const operator = document.querySelector('.operator');
+  const secondOperand = document.querySelector('.second-operand');
 
-  switch (operator) {
+  let firstValue = Number(firstOperand.textContent);
+  let operatorSymbol = operator.textContent;
+  let secondValue = Number(secondOperand.textContent);
+
+  switch (operatorSymbol) {
     case '+':
       correctAnswer = firstValue + secondValue;
       break;
@@ -130,7 +124,7 @@ function checkAnswer() {
   isCorrectAnswer = enteredAnswer == correctAnswer;
   if (isCorrectAnswer) {
     playSplashAnimation();
-    gameField.removeChild(document.querySelector('.drop'));
+    gameField.removeChild(drop);
   }
   changeScore();
 }
@@ -302,29 +296,44 @@ function setRandomOperandValue(
   return getRandomValue(min, max);
 }
 
-// Функция для установки случайного оператора
-function setRandomOperator(
-  arraySymbol = operatorSymbol,
-  min = limitIndexArrSymbol.min,
-  max = limitIndexArrSymbol.max
-) {
-  let randomIndex = getRandomValue(min, max);
+// Функция для установки операндов и оператора в зависимости от значений операндов
+function setOperandsAndOperator() {
+  const arrayValues = [];
+  let firstOperand = setRandomOperandValue();
+  let secondOperand = setRandomOperandValue();
+  let operatorSymbol;
 
-  return arraySymbol[randomIndex];
+  if (
+    (firstOperand / secondOperand === 1 ||
+      firstOperand % secondOperand === 0) &&
+    secondOperand > 1
+  ) {
+    operatorSymbol = '÷';
+  } else if (
+    secondOperand >= 2 &&
+    secondOperand <= 10 &&
+    firstOperand * secondOperand <= 90
+  ) {
+    operatorSymbol = '×';
+  } else if (firstOperand > secondOperand) {
+    operatorSymbol = '-';
+  } else if (firstOperand < secondOperand) {
+    operatorSymbol = '+';
+  }
+
+  arrayValues.push(firstOperand);
+  arrayValues.push(operatorSymbol);
+  arrayValues.push(secondOperand);
+
+  return arrayValues;
 }
-
-// Объект, содержащий случайные значения операндов и оператора
-const value = {
-  firstOperand: setRandomOperandValue(),
-  operator: setRandomOperator(),
-  secondOperand: setRandomOperandValue(),
-};
 
 // Функция для заполнения капли операндами и оператором
 function fillDropValues(firstOperand, operator, secondOperand) {
-  let firstValue = value.firstOperand;
-  let operatorSymbol = value.operator;
-  let secondValue = value.secondOperand;
+  const values = setOperandsAndOperator();
+  let firstValue = values[0];
+  let operatorSymbol = values[1];
+  let secondValue = values[2];
 
   firstOperand.innerHTML = firstValue;
   operator.innerHTML = operatorSymbol;
@@ -333,9 +342,11 @@ function fillDropValues(firstOperand, operator, secondOperand) {
 
 // Функция для определения расстояния до волны
 function findDistanceToWave() {
-  let touchСorrection = 70; // Корректировка касания волны
+  let touchСorrection = 100; // Корректировка касания волны
+  let distanceToWave =
+    gameField.offsetHeight - wave.offsetHeight - touchСorrection;
 
-  return gameField.offsetHeight - wave.offsetHeight - touchСorrection;
+  return distanceToWave;
 }
 
 // Функция для анимации падения капли
@@ -355,12 +366,11 @@ function animationFallDrop(dropElement, duration) {
       duration
     )
     .finished.then(() => {
-      if (!isPopping) {
-        fallInSeaSound.currentTime = 0;
-        fallInSeaSound.play();
-        wave.style.height = `${wave.offsetHeight + liftingHeight}px`;
-        wave2.style.height = `${wave2.offsetHeight + liftingHeight}px`;
-      }
+      fallInSeaSound.currentTime = 0;
+      fallInSeaSound.play();
+      wave.style.height = `${wave.offsetHeight + liftingHeight}px`;
+      wave2.style.height = `${wave2.offsetHeight + liftingHeight}px`;
+      gameField.removeChild(document.querySelector('.drop'));
     });
 }
 
@@ -381,20 +391,30 @@ function createSplash() {
 // Функция для создания капли
 function createDrop() {
   const dropElement = document.createElement('div');
-  const operator = document.createElement('span');
   const firstOperand = document.createElement('span');
+  const operator = document.createElement('span');
   const secondOperand = document.createElement('span');
 
-  isPopping = false;
   dropElement.className = 'drop';
+  firstOperand.className = 'operand first-operand';
   operator.className = 'operator';
-  firstOperand.className = 'operand';
-  secondOperand.className = 'operand';
+  secondOperand.className = 'operand second-operand';
   dropElement.style.left = `${setRandomDropPosition()}%`;
   dropElement.append(firstOperand, operator, secondOperand);
   gameField.append(dropElement);
   fillDropValues(firstOperand, operator, secondOperand);
   animationFallDrop(dropElement, animationDuration);
+
+  setTimeout(() => {
+    createDrop();
+  }, 5000);
+}
+
+// Функция для запуска игры
+function startGame() {
+  getBestScore(); // Получаем лучший результат перед стартом
+  currentScore = 0; // Устанавливаем значение текущего рейтинга равным нулю
+  createDrop(); // Запускаем создание капель
 }
 
 // Функция для запуска проигрывания фоновых звуков
@@ -425,4 +445,4 @@ soundButton.addEventListener('click', () => {
 // Слушаем нажатие на физическую клавиатуру
 window.addEventListener('keydown', useNumpad);
 
-createDrop();
+startGame(); // Запуск игры
