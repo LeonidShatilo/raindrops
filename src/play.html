@@ -18,6 +18,22 @@
   </head>
   <body>
     <div class="game-container">
+      <div class="game-statistic">
+        <h1 class="game-over-text">Game over</h1>
+        <h2 class="title">Speed</h2>
+        <p class="description">
+          Equations Per Minute: <span class="equations-per-minute"></span>
+        </p>
+        <p class="description">
+          Total Equations Solved: <span class="total-equations"></span>
+        </p>
+        <h2 class="title">Accuracy</h2>
+        <p class="description">Overall: <span class="overall"></span></p>
+        <p class="score-text"><span class="score-points"></span> points</p>
+        <button class="reload" onClick="window.location.reload()">
+          Continue
+        </button>
+      </div>
       <div class="game-field">
         <span class="wrong-answer">-10</span>
         <div class="mountains"></div>
@@ -91,6 +107,11 @@
       src="/raindrops/assets/sounds/pop-drop.mp3"
       type="audio/mp3"
       class="pop-drop-sound"
+    ></audio>
+    <audio
+      src="/raindrops/assets/sounds/game-over.mp3"
+      type="audio/mp3"
+      class="game-over-sound"
     ></audio>
     <script src="/raindrops/src/scripts/play.js"></script>
   </body>
