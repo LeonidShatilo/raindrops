@@ -13,6 +13,12 @@ const correctAnswerSound = document.querySelector('.correct-answer-sound');
 const wrongAnswerSound = document.querySelector('.wrong-answer-sound');
 const fallInSeaSound = document.querySelector('.fall-in-sea-sound');
 const popDropSound = document.querySelector('.pop-drop-sound');
+const gameOverSound = document.querySelector('.game-over-sound');
+const gameStatistic = document.querySelector('.game-statistic');
+const scorePoints = document.querySelector('.score-points');
+const totalEquations = document.querySelector('.total-equations');
+const equationsPerMinute = document.querySelector('.equations-per-minute');
+const overall = document.querySelector('.overall');
 
 const animationDuration = 17000; // Продолжительность анимации
 
@@ -29,9 +35,9 @@ const limitOperandValue = {
 };
 
 let currentScore = 0; // Текущее значение рейтинга
-let savedScore = 0; // Сохранённое значение рейтинга
 let baseChangeScore = 10; // Базовая величина изменения рейтинга
 let countCorrectAnswer = 0; // Подсчёт правильных ответов
+let countDrop = 1; // Подсчёт созданных капель
 let countDropFallen = 0; // Подсчёт упавших в море капель
 let healthPoints = 3; // Количество очков здоровья
 let enteredAnswer; // Введённый ответ
@@ -93,8 +99,8 @@ function getBestScore() {
 
 // Функция для установки лучшего рейтинга
 function setBestScore() {
-  if (savedScore > Number(localStorage.getItem('best-score'))) {
-    localStorage.setItem('best-score', savedScore);
+  if (currentScore > Number(localStorage.getItem('best-score'))) {
+    localStorage.setItem('best-score', currentScore);
   }
 }
 
@@ -352,6 +358,26 @@ function findDistanceToWave() {
   return distanceToWave;
 }
 
+// Функция для подсчёта и показа игровой статистики
+function showGameStatistics() {
+  const convertToPercent = 100;
+  const convertMsToMin = 60000;
+
+  equationsPerMinute.innerHTML = Math.round(
+    countCorrectAnswer / (performance.now() / convertMsToMin)
+  );
+  totalEquations.innerHTML = countCorrectAnswer;
+  overall.innerHTML = `${Math.ceil(
+    (countCorrectAnswer / countDrop) * convertToPercent
+  )}%`;
+  scorePoints.innerHTML = currentScore;
+
+  gameStatistic.classList.add('visible');
+  pauseSound();
+  gameOverSound.play();
+  setBestScore();
+}
+
 // Функция для анимации падения капли
 function animationFallDrop(dropElement, duration) {
   let liftingHeight = 50; // Высота подъёма воды
@@ -377,6 +403,7 @@ function animationFallDrop(dropElement, duration) {
         fallInSeaSound.currentTime = 0;
         fallInSeaSound.play();
         if (countDropFallen >= healthPoints) {
+          showGameStatistics();
           isGameOver = true;
           document
             .querySelectorAll('.drop')
@@ -429,11 +456,13 @@ function createDrop() {
       return;
     }
     createDrop();
+    countDrop++;
   }, creationInterval);
 }
 
 // Функция для запуска игры
 function startGame() {
+  playSound(); // Включаем фоновый звук
   getBestScore(); // Получаем лучший результат перед стартом
   currentScore = 0; // Устанавливаем значение текущего рейтинга равным нулю
   createDrop(); // Запускаем создание капель
