@@ -32,10 +32,13 @@ let currentScore = 0; // Текущее значение рейтинга
 let savedScore = 0; // Сохранённое значение рейтинга
 let baseChangeScore = 10; // Базовая величина изменения рейтинга
 let countCorrectAnswer = 0; // Подсчёт правильных ответов
+let countDropFallen = 0; // Подсчёт упавших в море капель
+let healthPoints = 3; // Количество очков здоровья
 let enteredAnswer; // Введённый ответ
 let correctAnswer; // Правильный ответ
 let isSoundOn = true; // Флаг для определения, должны ли проигрываться фоновые звуки
 let isCorrectAnswer; // Флаг для определения корректности ответа
+let isGameOver = false; // Флаг для определения завершения игры
 
 // Функция для изменения рейтинга
 function changeScore() {
@@ -366,11 +369,25 @@ function animationFallDrop(dropElement, duration) {
       duration
     )
     .finished.then(() => {
-      fallInSeaSound.currentTime = 0;
-      fallInSeaSound.play();
-      wave.style.height = `${wave.offsetHeight + liftingHeight}px`;
-      wave2.style.height = `${wave2.offsetHeight + liftingHeight}px`;
-      gameField.removeChild(document.querySelector('.drop'));
+      try {
+        gameField.removeChild(document.querySelector('.drop'));
+        countDropFallen++;
+        wave.style.height = `${wave.offsetHeight + liftingHeight}px`;
+        wave2.style.height = `${wave2.offsetHeight + liftingHeight}px`;
+        fallInSeaSound.currentTime = 0;
+        fallInSeaSound.play();
+        if (countDropFallen >= healthPoints) {
+          isGameOver = true;
+          document
+            .querySelectorAll('.drop')
+            .forEach(() =>
+              gameField.removeChild(document.querySelector('.drop'))
+            );
+        }
+      } catch {
+        // Выходим, если словили ошибку
+        return;
+      }
     });
 }
 
@@ -395,6 +412,8 @@ function createDrop() {
   const operator = document.createElement('span');
   const secondOperand = document.createElement('span');
 
+  let creationInterval = 5000;
+
   dropElement.className = 'drop';
   firstOperand.className = 'operand first-operand';
   operator.className = 'operator';
@@ -406,8 +425,11 @@ function createDrop() {
   animationFallDrop(dropElement, animationDuration);
 
   setTimeout(() => {
+    if (isGameOver) {
+      return;
+    }
     createDrop();
-  }, 5000);
+  }, creationInterval);
 }
 
 // Функция для запуска игры
