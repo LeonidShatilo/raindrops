@@ -20,8 +20,6 @@ const totalEquations = document.querySelector('.total-equations');
 const equationsPerMinute = document.querySelector('.equations-per-minute');
 const overall = document.querySelector('.overall');
 
-const animationDuration = 17000; // Продолжительность анимации
-
 // Минимальное и максимальное значение для случайного положения капли
 const limitPositionValue = {
   min: 0,
@@ -313,12 +311,13 @@ function setOperandsAndOperator() {
   let operatorSymbol;
 
   if (
-    (firstOperand / secondOperand === 1 ||
-      firstOperand % secondOperand === 0) &&
+    firstOperand % secondOperand === 0 &&
+    firstOperand / secondOperand !== 1 &&
     secondOperand > 1
   ) {
     operatorSymbol = '÷';
   } else if (
+    firstOperand > 2 &&
     secondOperand >= 2 &&
     secondOperand <= 10 &&
     firstOperand * secondOperand <= 90
@@ -327,6 +326,8 @@ function setOperandsAndOperator() {
   } else if (firstOperand > secondOperand) {
     operatorSymbol = '-';
   } else if (firstOperand < secondOperand) {
+    operatorSymbol = '+';
+  } else {
     operatorSymbol = '+';
   }
 
@@ -349,19 +350,10 @@ function fillDropValues(firstOperand, operator, secondOperand) {
   secondOperand.innerHTML = secondValue;
 }
 
-// Функция для определения расстояния до волны
-function findDistanceToWave() {
-  let touchСorrection = 100; // Корректировка касания волны
-  let distanceToWave =
-    gameField.offsetHeight - wave.offsetHeight - touchСorrection;
-
-  return distanceToWave;
-}
-
 // Функция для подсчёта и показа игровой статистики
 function showGameStatistics() {
-  const convertToPercent = 100;
   const convertMsToMin = 60000;
+  const convertToPercent = 100;
 
   equationsPerMinute.innerHTML = Math.round(
     countCorrectAnswer / (performance.now() / convertMsToMin)
@@ -379,43 +371,20 @@ function showGameStatistics() {
 }
 
 // Функция для анимации падения капли
-function animationFallDrop(dropElement, duration) {
-  let liftingHeight = 50; // Высота подъёма воды
+function animationFallDrop(dropElement) {
+  const duration = 20000; // Продолжительность анимации
 
-  dropElement
-    .animate(
-      [
-        {
-          top: 0,
-        },
-        {
-          top: `${findDistanceToWave()}px`,
-        },
-      ],
-      duration
-    )
-    .finished.then(() => {
-      try {
-        gameField.removeChild(document.querySelector('.drop'));
-        countDropFallen++;
-        wave.style.height = `${wave.offsetHeight + liftingHeight}px`;
-        wave2.style.height = `${wave2.offsetHeight + liftingHeight}px`;
-        fallInSeaSound.currentTime = 0;
-        fallInSeaSound.play();
-        if (countDropFallen >= healthPoints) {
-          showGameStatistics();
-          isGameOver = true;
-          document
-            .querySelectorAll('.drop')
-            .forEach(() =>
-              gameField.removeChild(document.querySelector('.drop'))
-            );
-        }
-      } catch {
-        // Выходим, если словили ошибку
-        return;
-      }
-    });
+  dropElement.animate(
+    [
+      {
+        top: 0,
+      },
+      {
+        top: `${gameField.offsetHeight}px`,
+      },
+    ],
+    duration
+  );
 }
 
 // Функция для создания брызг
@@ -430,6 +399,45 @@ function createSplash() {
   imageSplash.style.top = `${drop.offsetTop + offsetTopСorrection}px`;
   imageSplash.style.left = `${drop.offsetLeft + offsetLeftСorrection}px`;
   gameField.append(imageSplash);
+}
+
+// Функция для проверки касания волны
+function checkTouchToWave() {
+  const drop = document.querySelector('.drop');
+  const liftingHeight = 50; // Высота подъёма воды
+  const updateFrequency = 500; // Частота обновления координат
+  const delayShowStatistics = 500; // Задержка перед отображением статистики
+
+  let dropCoordinateY = drop.offsetTop + drop.offsetHeight;
+  let waveCoordinateY = wave.offsetTop;
+
+  if (dropCoordinateY >= waveCoordinateY) {
+    gameField.removeChild(document.querySelector('.drop'));
+    countDropFallen++;
+    wave.style.height = `${wave.offsetHeight + liftingHeight}px`;
+    wave2.style.height = `${wave2.offsetHeight + liftingHeight}px`;
+    fallInSeaSound.currentTime = 0;
+    fallInSeaSound.play();
+    if (countDropFallen >= healthPoints) {
+      setTimeout(() => {
+        showGameStatistics();
+        isGameOver = true;
+        document
+          .querySelectorAll('.drop')
+          .forEach(() =>
+            gameField.removeChild(document.querySelector('.drop'))
+          );
+      }, delayShowStatistics);
+    }
+  }
+
+  setTimeout(() => {
+    try {
+      checkTouchToWave();
+    } catch (error) {
+      return;
+    }
+  }, updateFrequency);
 }
 
 // Функция для создания капли
@@ -447,9 +455,10 @@ function createDrop() {
   secondOperand.className = 'operand second-operand';
   dropElement.style.left = `${setRandomDropPosition()}%`;
   dropElement.append(firstOperand, operator, secondOperand);
-  gameField.append(dropElement);
   fillDropValues(firstOperand, operator, secondOperand);
-  animationFallDrop(dropElement, animationDuration);
+  gameField.append(dropElement);
+  animationFallDrop(dropElement);
+  checkTouchToWave();
 
   setTimeout(() => {
     if (isGameOver) {
