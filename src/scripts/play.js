@@ -27,10 +27,28 @@ const limitPositionValue = {
   max: 85,
 };
 
-// Минимальное и максимальное значение операнда
+// Минимальное и максимальное значение операнда в зависимости от уровня
 const limitOperandValue = {
-  min: 1,
-  max: 15,
+  level1: {
+    min: 1,
+    max: 15,
+  },
+  level2: {
+    min: 2,
+    max: 20,
+  },
+  level3: {
+    min: 4,
+    max: 30,
+  },
+  level4: {
+    min: 6,
+    max: 40,
+  },
+  level5: {
+    min: 8,
+    max: 60,
+  },
 };
 
 // Максимальное и минимальное значение для интервала создания бонусных капель
@@ -40,7 +58,7 @@ const creationBonusDropInterval = {
 };
 
 let durationAnimate = 20000; // Продолжительность анимации
-let creationDropInterval = 7000; // Интервал создания капель
+let creationDropInterval = 6000; // Интервал создания капель
 let currentScore = 0; // Текущее значение рейтинга
 let baseChangeScore = 10; // Базовая величина изменения рейтинга
 let countCorrectAnswer = 0; // Подсчёт правильных ответов
@@ -70,6 +88,7 @@ function changeDropFallSpeed() {
 
 // Функция для изменения рейтинга
 function changeScore() {
+  const countDropsOnWindow = document.querySelectorAll('.drop').length;
   let timeShowWrongAnswerText = 600;
   let addScore = currentScore + baseChangeScore + countCorrectAnswer;
   let removeScore = currentScore - baseChangeScore - countCorrectAnswer;
@@ -78,12 +97,13 @@ function changeScore() {
     if (isCorrectAnswer) {
       correctAnswerSound.currentTime = 0;
       correctAnswerSound.play();
+      currentScore = addScore;
     }
     if (isCorrectBonusAnswer) {
       correctBonusAnswerSound.currentTime = 0;
       correctBonusAnswerSound.play();
+      currentScore = addScore + countDropsOnWindow * baseChangeScore;
     }
-    currentScore = addScore;
     scoreBoard.innerHTML = currentScore;
     countCorrectAnswer++;
     changeDropFallSpeed();
@@ -198,7 +218,7 @@ function checkAnswer() {
 
 // Функция для обновления значения на дисплее
 function updateDisplay(number) {
-  if (display.value.length < 3) {
+  if (display.value.length < 4) {
     if (display.value == 0) {
       display.value = number;
     } else {
@@ -255,7 +275,7 @@ keyboard.onclick = function (event) {
 
 // Функция для использования цифрового блока на физической клавиатуре
 function useNumpad(event) {
-  if (display.value.length < 3) {
+  if (display.value.length < 4) {
     switch (event.code) {
       case 'Numpad0':
         if (display.value == 0) {
@@ -356,11 +376,28 @@ function setRandomDropPosition(
 }
 
 // Функция для установки случайного значения оператора
-function setRandomOperandValue(
-  min = limitOperandValue.min,
-  max = limitOperandValue.max
-) {
-  return getRandomValue(min, max);
+function setRandomOperandValue() {
+  let minValue;
+  let maxValue;
+
+  if (countCorrectAnswer >= 0 && countCorrectAnswer < 50) {
+    minValue = limitOperandValue.level1.min;
+    maxValue = limitOperandValue.level1.max;
+  } else if (countCorrectAnswer >= 50 && countCorrectAnswer < 100) {
+    minValue = limitOperandValue.level2.min;
+    maxValue = limitOperandValue.level2.max;
+  } else if (countCorrectAnswer >= 100 && countCorrectAnswer < 150) {
+    minValue = limitOperandValue.level3.min;
+    maxValue = limitOperandValue.level3.max;
+  } else if (countCorrectAnswer >= 150 && countCorrectAnswer < 200) {
+    minValue = limitOperandValue.level4.min;
+    maxValue = limitOperandValue.level4.max;
+  } else {
+    minValue = limitOperandValue.level5.min;
+    maxValue = limitOperandValue.level5.max;
+  }
+
+  return getRandomValue(minValue, maxValue);
 }
 
 // Функция для установки операндов и оператора в зависимости от значений операндов
@@ -370,23 +407,18 @@ function setOperandsAndOperator() {
   let secondOperand = setRandomOperandValue();
   let operatorSymbol;
 
-  if (
-    firstOperand % secondOperand === 0 &&
-    firstOperand / secondOperand !== 1 &&
-    secondOperand > 1
-  ) {
-    operatorSymbol = '÷';
-  } else if (
-    firstOperand > 2 &&
-    secondOperand >= 2 &&
-    secondOperand <= 10 &&
-    firstOperand * secondOperand <= 90
-  ) {
-    operatorSymbol = '×';
-  } else if (firstOperand > secondOperand) {
-    operatorSymbol = '-';
-  } else if (firstOperand < secondOperand) {
-    operatorSymbol = '+';
+  if (firstOperand > secondOperand) {
+    if (
+      firstOperand % secondOperand === 0 &&
+      firstOperand / secondOperand !== 1 &&
+      secondOperand > 1
+    ) {
+      operatorSymbol = '÷';
+    } else if (firstOperand >= 2 && secondOperand >= 2) {
+      operatorSymbol = '×';
+    } else {
+      operatorSymbol = '-';
+    }
   } else {
     operatorSymbol = '+';
   }
