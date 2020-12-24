@@ -10,6 +10,7 @@ const soundButton = document.getElementById('sound');
 const rainSound = document.querySelector('.rain-sound');
 const seaSound = document.querySelector('.sea-sound');
 const correctAnswerSound = document.querySelector('.correct-answer-sound');
+const correctBonusAnswerSound = document.querySelector('.correct-bonus-answer-sound');
 const wrongAnswerSound = document.querySelector('.wrong-answer-sound');
 const fallInSeaSound = document.querySelector('.fall-in-sea-sound');
 const popDropSound = document.querySelector('.pop-drop-sound');
@@ -32,6 +33,14 @@ const limitOperandValue = {
   max: 15,
 };
 
+const creationDropInterval = 5000; // Интервал создания капель
+
+// Максимальное и минимальное значение для интервала создания бонусных капель
+const creationBonusDropInterval = {
+  min: 25365,
+  max: 45735,
+};
+
 let currentScore = 0; // Текущее значение рейтинга
 let baseChangeScore = 10; // Базовая величина изменения рейтинга
 let countCorrectAnswer = 0; // Подсчёт правильных ответов
@@ -40,8 +49,10 @@ let countDropFallen = 0; // Подсчёт упавших в море капел
 let healthPoints = 3; // Количество очков здоровья
 let enteredAnswer; // Введённый ответ
 let correctAnswer; // Правильный ответ
+let correctBonusAnswer; // Правильный бонусный ответ
 let isSoundOn = true; // Флаг для определения, должны ли проигрываться фоновые звуки
 let isCorrectAnswer; // Флаг для определения корректности ответа
+let isCorrectBonusAnswer; // Флаг для определения корректности бонусного ответа
 let isGameOver = false; // Флаг для определения завершения игры
 
 // Функция для изменения рейтинга
@@ -50,9 +61,15 @@ function changeScore() {
   let addScore = currentScore + baseChangeScore + countCorrectAnswer;
   let removeScore = currentScore - baseChangeScore - countCorrectAnswer;
 
-  if (isCorrectAnswer) {
-    correctAnswerSound.currentTime = 0;
-    correctAnswerSound.play();
+  if (isCorrectAnswer || isCorrectBonusAnswer) {
+    if (isCorrectAnswer) {
+      correctAnswerSound.currentTime = 0;
+      correctAnswerSound.play();
+    }
+    if (isCorrectBonusAnswer) {
+      correctBonusAnswerSound.currentTime = 0;
+      correctBonusAnswerSound.play();
+    }
     currentScore = addScore;
     scoreBoard.innerHTML = currentScore;
     countCorrectAnswer++;
@@ -64,7 +81,6 @@ function changeScore() {
     } else {
       currentScore = 0;
     }
-
     scoreBoard.innerHTML = currentScore;
     wrongAnswerText.innerHTML = -baseChangeScore - countCorrectAnswer;
     wrongAnswerText.classList.add('show');
@@ -75,14 +91,14 @@ function changeScore() {
 }
 
 // Функция для запуска анимации брызг
-function playSplashAnimation() {
+function playSplashAnimation(elementName, splashName) {
   let timeShowDropSplash = 450;
 
-  createSplash();
+  createSplash(elementName, splashName);
   popDropSound.currentTime = 0;
   popDropSound.play();
   setTimeout(() => {
-    gameField.removeChild(document.querySelector('.splash'));
+    gameField.removeChild(document.querySelector(`.${splashName}`));
   }, timeShowDropSplash);
 }
 
@@ -105,32 +121,65 @@ function setBestScore() {
 // Функция для проверки введённого ответа
 function checkAnswer() {
   const drop = document.querySelector('.drop');
-  const firstOperand = document.querySelector('.first-operand');
+  const allDrops = document.querySelectorAll('.drop');
+  const bonusDrop = document.querySelector('.bonus-drop');
+  const firstOperandDrop = document.querySelector('.first-operand-drop');
+  const secondOperandDrop = document.querySelector('.second-operand-drop');
   const operator = document.querySelector('.operator');
-  const secondOperand = document.querySelector('.second-operand');
+  const firstOperandBonusDrop = document.querySelector(
+    '.first-operand-bonus-drop'
+  );
+  const secondOperandBonusDrop = document.querySelector(
+    '.second-operand-bonus-drop'
+  );
 
-  let firstValue = Number(firstOperand.textContent);
-  let operatorSymbol = operator.textContent;
-  let secondValue = Number(secondOperand.textContent);
+  let firstValue;
+  let secondValue;
+  let operatorSymbol;
+  let firstBonusValue;
+  let secondBonusValue;
+
+  try {
+    firstValue = Number(firstOperandDrop.textContent);
+    secondValue = Number(secondOperandDrop.textContent);
+    operatorSymbol = operator.textContent;
+    firstBonusValue = Number(firstOperandBonusDrop.textContent);
+    secondBonusValue = Number(secondOperandBonusDrop.textContent);
+  } catch (error) {}
 
   switch (operatorSymbol) {
     case '+':
       correctAnswer = firstValue + secondValue;
+      correctBonusAnswer = firstBonusValue + secondBonusValue;
       break;
     case '-':
       correctAnswer = firstValue - secondValue;
+      correctBonusAnswer = firstBonusValue - secondBonusValue;
       break;
     case '×':
       correctAnswer = firstValue * secondValue;
+      correctBonusAnswer = firstBonusValue * secondBonusValue;
       break;
     case '÷':
       correctAnswer = firstValue / secondValue;
+      correctBonusAnswer = firstBonusValue / secondBonusValue;
       break;
   }
 
   isCorrectAnswer = enteredAnswer == correctAnswer;
-  if (isCorrectAnswer) {
-    playSplashAnimation();
+  isCorrectBonusAnswer = enteredAnswer == correctBonusAnswer;
+
+  if (isCorrectBonusAnswer) {
+    playSplashAnimation('bonus-drop', 'bonus-drop-splash');
+    gameField.removeChild(bonusDrop);
+    allDrops.forEach((allDrops) => {
+      playSplashAnimation('drop', 'drop-splash');
+      gameField.removeChild(allDrops);
+    });
+    changeScore();
+    return;
+  } else if (isCorrectAnswer) {
+    playSplashAnimation('drop', 'drop-splash');
     gameField.removeChild(drop);
   }
   changeScore();
@@ -284,7 +333,7 @@ function useNumpad(event) {
 
 // Функция для получения рандомного значения с учётом принимаемого диапазона
 function getRandomValue(min, max) {
-  return Math.floor(Math.random() * (max - min) + min);
+  return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
 // Функция для появления капли из случайного места по горизонтали
@@ -338,6 +387,13 @@ function setOperandsAndOperator() {
   return arrayValues;
 }
 
+function setRandomTimeCreateBonusDrop(
+  min = creationBonusDropInterval.min,
+  max = creationBonusDropInterval.max
+) {
+  return getRandomValue(min, max);
+}
+
 // Функция для заполнения капли операндами и оператором
 function fillDropValues(firstOperand, operator, secondOperand) {
   const values = setOperandsAndOperator();
@@ -388,31 +444,53 @@ function animationFallDrop(dropElement) {
 }
 
 // Функция для создания брызг
-function createSplash() {
-  const drop = document.querySelector('.drop');
+function createSplash(elementName, splashName) {
+  const thisElementName = document.querySelector(`.${elementName}`);
+  const thisSplashName = splashName;
+
   let offsetTopСorrection = 50;
   let offsetLeftСorrection = 10;
   let imageSplash = new Image(80, 80);
 
-  imageSplash.src = '/raindrops/assets/images/svg/splash.svg';
-  imageSplash.className = 'splash';
-  imageSplash.style.top = `${drop.offsetTop + offsetTopСorrection}px`;
-  imageSplash.style.left = `${drop.offsetLeft + offsetLeftСorrection}px`;
+  imageSplash.src = `/raindrops/assets/images/svg/${thisSplashName}.svg`;
+  imageSplash.className = `${thisSplashName}`;
+  imageSplash.style.top = `${
+    thisElementName.offsetTop + offsetTopСorrection
+  }px`;
+  imageSplash.style.left = `${
+    thisElementName.offsetLeft + offsetLeftСorrection
+  }px`;
   gameField.append(imageSplash);
 }
 
 // Функция для проверки касания волны
 function checkTouchToWave() {
   const drop = document.querySelector('.drop');
+  const bonusDrop = document.querySelector('.bonus-drop');
   const liftingHeight = 50; // Высота подъёма воды
   const updateFrequency = 500; // Частота обновления координат
   const delayShowStatistics = 500; // Задержка перед отображением статистики
 
-  let dropCoordinateY = drop.offsetTop + drop.offsetHeight;
+  let dropCoordinateY;
+  let bonusDropCoordinateY;
   let waveCoordinateY = wave.offsetTop;
+
+  try {
+    dropCoordinateY = drop.offsetTop + drop.offsetHeight;
+    bonusDropCoordinateY = bonusDrop.offsetTop + bonusDrop.offsetHeight;
+  } catch (error) {}
 
   if (dropCoordinateY >= waveCoordinateY) {
     gameField.removeChild(document.querySelector('.drop'));
+  }
+  if (bonusDropCoordinateY >= waveCoordinateY) {
+    gameField.removeChild(document.querySelector('.bonus-drop'));
+  }
+
+  if (
+    dropCoordinateY >= waveCoordinateY ||
+    bonusDropCoordinateY >= waveCoordinateY
+  ) {
     countDropFallen++;
     wave.style.height = `${wave.offsetHeight + liftingHeight}px`;
     wave2.style.height = `${wave2.offsetHeight + liftingHeight}px`;
@@ -432,6 +510,9 @@ function checkTouchToWave() {
   }
 
   setTimeout(() => {
+    if (isGameOver) {
+      return;
+    }
     try {
       checkTouchToWave();
     } catch (error) {
@@ -440,19 +521,18 @@ function checkTouchToWave() {
   }, updateFrequency);
 }
 
-// Функция для создания капли
-function createDrop() {
+// Функция для создания элемента капли в зависимости от получаемого имени
+function create(ElementName) {
+  const thisName = ElementName;
   const dropElement = document.createElement('div');
   const firstOperand = document.createElement('span');
   const operator = document.createElement('span');
   const secondOperand = document.createElement('span');
 
-  let creationInterval = 5000;
-
-  dropElement.className = 'drop';
-  firstOperand.className = 'operand first-operand';
+  dropElement.className = `${thisName}`;
+  firstOperand.className = `operand first-operand-${thisName}`;
   operator.className = 'operator';
-  secondOperand.className = 'operand second-operand';
+  secondOperand.className = `operand second-operand-${thisName}`;
   dropElement.style.left = `${setRandomDropPosition()}%`;
   dropElement.append(firstOperand, operator, secondOperand);
   fillDropValues(firstOperand, operator, secondOperand);
@@ -460,13 +540,24 @@ function createDrop() {
   animationFallDrop(dropElement);
   checkTouchToWave();
 
-  setTimeout(() => {
-    if (isGameOver) {
-      return;
-    }
-    createDrop();
-    countDrop++;
-  }, creationInterval);
+  if (thisName === 'drop') {
+    setTimeout(() => {
+      if (isGameOver) {
+        return;
+      }
+      create(thisName);
+      countDrop++;
+    }, creationDropInterval);
+  }
+  if (thisName === 'bonus-drop') {
+    setTimeout(() => {
+      if (isGameOver) {
+        return;
+      }
+      create(thisName);
+      countDrop++;
+    }, setRandomTimeCreateBonusDrop());
+  }
 }
 
 // Функция для запуска игры
@@ -474,7 +565,10 @@ function startGame() {
   playSound(); // Включаем фоновый звук
   getBestScore(); // Получаем лучший результат перед стартом
   currentScore = 0; // Устанавливаем значение текущего рейтинга равным нулю
-  createDrop(); // Запускаем создание капель
+  create('drop'); // Запускаем создание капель
+  setTimeout(() => {
+    create('bonus-drop'); // Запускаем создание бонусных капель
+  }, setRandomTimeCreateBonusDrop());
 }
 
 // Функция для запуска проигрывания фоновых звуков
