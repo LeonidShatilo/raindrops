@@ -33,14 +33,14 @@ const limitOperandValue = {
   max: 15,
 };
 
-const creationDropInterval = 5000; // Интервал создания капель
-
 // Максимальное и минимальное значение для интервала создания бонусных капель
 const creationBonusDropInterval = {
   min: 25365,
   max: 45735,
 };
 
+let durationAnimate = 20000; // Продолжительность анимации
+let creationDropInterval = 7000; // Интервал создания капель
 let currentScore = 0; // Текущее значение рейтинга
 let baseChangeScore = 10; // Базовая величина изменения рейтинга
 let countCorrectAnswer = 0; // Подсчёт правильных ответов
@@ -54,6 +54,19 @@ let isSoundOn = true; // Флаг для определения, должны л
 let isCorrectAnswer; // Флаг для определения корректности ответа
 let isCorrectBonusAnswer; // Флаг для определения корректности бонусного ответа
 let isGameOver = false; // Флаг для определения завершения игры
+
+// Функция для изменения скорости падения капли
+function changeDropFallSpeed() {
+  durationAnimate -= 250;
+  creationDropInterval -= 70;
+
+  if (durationAnimate <= 4000) {
+    durationAnimate = 4000;
+  }
+  if (creationDropInterval <= 3000) {
+    creationDropInterval = 3000;
+  }
+}
 
 // Функция для изменения рейтинга
 function changeScore() {
@@ -73,6 +86,7 @@ function changeScore() {
     currentScore = addScore;
     scoreBoard.innerHTML = currentScore;
     countCorrectAnswer++;
+    changeDropFallSpeed();
   } else {
     wrongAnswerSound.currentTime = 0;
     wrongAnswerSound.play();
@@ -126,23 +140,20 @@ function checkAnswer() {
   const firstOperandDrop = document.querySelector('.first-operand-drop');
   const secondOperandDrop = document.querySelector('.second-operand-drop');
   const operator = document.querySelector('.operator');
-  const firstOperandBonusDrop = document.querySelector(
-    '.first-operand-bonus-drop'
-  );
-  const secondOperandBonusDrop = document.querySelector(
-    '.second-operand-bonus-drop'
-  );
+  const firstOperandBonusDrop = document.querySelector('.first-operand-bonus-drop');
+  const secondOperandBonusDrop = document.querySelector('.second-operand-bonus-drop');
 
   let firstValue;
   let secondValue;
-  let operatorSymbol;
   let firstBonusValue;
   let secondBonusValue;
+  let operatorSymbol = operator.textContent;
 
   try {
     firstValue = Number(firstOperandDrop.textContent);
     secondValue = Number(secondOperandDrop.textContent);
-    operatorSymbol = operator.textContent;
+  } catch (error) {}
+  try {
     firstBonusValue = Number(firstOperandBonusDrop.textContent);
     secondBonusValue = Number(secondOperandBonusDrop.textContent);
   } catch (error) {}
@@ -428,8 +439,6 @@ function showGameStatistics() {
 
 // Функция для анимации падения капли
 function animationFallDrop(dropElement) {
-  const duration = 20000; // Продолжительность анимации
-
   dropElement.animate(
     [
       {
@@ -439,7 +448,7 @@ function animationFallDrop(dropElement) {
         top: `${gameField.offsetHeight}px`,
       },
     ],
-    duration
+    durationAnimate
   );
 }
 
@@ -477,6 +486,8 @@ function checkTouchToWave() {
 
   try {
     dropCoordinateY = drop.offsetTop + drop.offsetHeight;
+  } catch (error) {}
+  try {
     bonusDropCoordinateY = bonusDrop.offsetTop + bonusDrop.offsetHeight;
   } catch (error) {}
 
