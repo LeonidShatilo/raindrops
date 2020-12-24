@@ -267,7 +267,8 @@ body {
   color: #004d60;
 }
 
-.drop {
+.drop,
+.bonus-drop {
   position: absolute;
   top: -20%;
   left: 0;
@@ -281,8 +282,15 @@ body {
   font-weight: bold;
   z-index: 1;
   background-size: 100%;
-  background-image: url('/raindrops/assets/images/svg/drop.svg');
   background-repeat: no-repeat;
+}
+
+.drop {
+  background-image: url('/raindrops/assets/images/svg/drop.svg');
+}
+
+.bonus-drop {
+  background-image: url('/raindrops/assets/images/svg/bonus-drop.svg');
 }
 
 /* WRONG ANSWER TEXT */
@@ -318,7 +326,8 @@ body {
 
 /* SPLASH */
 
-.splash {
+.drop-splash,
+.bonus-drop-splash {
   position: absolute;
   width: 80px;
   height: 80px;
