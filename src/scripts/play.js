@@ -1,12 +1,15 @@
+const gameContainer = document.querySelector('.game-container');
 const display = document.getElementById('display');
 const keyboard = document.querySelector('.wrapper-keyboard');
 const gameField = document.querySelector('.game-field');
 const scoreBoard = document.querySelector('.score');
 const bestScoreBoard = document.querySelector('.best-score');
 const wrongAnswerText = document.querySelector('.wrong-answer');
+const bonusAnswerText = document.querySelector('.bonus-answer');
 const wave = document.querySelector('.wave');
 const wave2 = document.querySelector('.wave-2');
 const soundButton = document.getElementById('sound');
+const fullscreenButton = document.getElementById('fullscreen');
 const rainSound = document.querySelector('.rain-sound');
 const seaSound = document.querySelector('.sea-sound');
 const correctAnswerSound = document.querySelector('.correct-answer-sound');
@@ -23,7 +26,7 @@ const overall = document.querySelector('.overall');
 
 // Минимальное и максимальное значение для случайного положения капли
 const limitPositionValue = {
-  min: 0,
+  min: 1,
   max: 85,
 };
 
@@ -31,7 +34,7 @@ const limitPositionValue = {
 const limitOperandValue = {
   level1: {
     min: 1,
-    max: 15,
+    max: 10,
   },
   level2: {
     min: 2,
@@ -53,10 +56,12 @@ const limitOperandValue = {
 
 // Максимальное и минимальное значение для интервала создания бонусных капель
 const creationBonusDropInterval = {
-  min: 25365,
-  max: 45735,
+  min: 34365,
+  max: 62735,
 };
 
+let resultArray = []; // Массив для хранения результатов вычисления капель
+let dropsArray = []; // Массив для хранения списка элементов капель
 let durationAnimate = 20000; // Продолжительность анимации
 let creationDropInterval = 6000; // Интервал создания капель
 let currentScore = 0; // Текущее значение рейтинга
@@ -89,6 +94,7 @@ function changeDropFallSpeed() {
 // Функция для изменения рейтинга
 function changeScore() {
   const countDropsOnWindow = document.querySelectorAll('.drop').length;
+
   let timeShowWrongAnswerText = 600;
   let addScore = currentScore + baseChangeScore + countCorrectAnswer;
   let removeScore = currentScore - baseChangeScore - countCorrectAnswer;
@@ -103,6 +109,14 @@ function changeScore() {
       correctBonusAnswerSound.currentTime = 0;
       correctBonusAnswerSound.play();
       currentScore = addScore + countDropsOnWindow * baseChangeScore;
+      bonusAnswerText.innerHTML = `+${
+        baseChangeScore + countCorrectAnswer +
+        countDropsOnWindow * baseChangeScore
+      }`;
+      bonusAnswerText.classList.add('show');
+      setTimeout(() => {
+        bonusAnswerText.classList.remove('show');
+      }, timeShowWrongAnswerText);
     }
     scoreBoard.innerHTML = currentScore;
     countCorrectAnswer++;
@@ -125,14 +139,16 @@ function changeScore() {
 }
 
 // Функция для запуска анимации брызг
-function playSplashAnimation(elementName, splashName) {
-  let timeShowDropSplash = 450;
+function playSplashAnimation(index, elementName, splashName) {
+  const timeShowDropSplash = 450;
 
-  createSplash(elementName, splashName);
+  createSplash(index, elementName, splashName);
   popDropSound.currentTime = 0;
   popDropSound.play();
   setTimeout(() => {
-    gameField.removeChild(document.querySelector(`.${splashName}`));
+    try {
+      gameField.removeChild(document.querySelector(`.${splashName}`));
+    } catch (error) {}
   }, timeShowDropSplash);
 }
 
@@ -154,66 +170,39 @@ function setBestScore() {
 
 // Функция для проверки введённого ответа
 function checkAnswer() {
-  const drop = document.querySelector('.drop');
   const allDrops = document.querySelectorAll('.drop');
   const bonusDrop = document.querySelector('.bonus-drop');
-  const firstOperandDrop = document.querySelector('.first-operand-drop');
-  const secondOperandDrop = document.querySelector('.second-operand-drop');
-  const operator = document.querySelector('.operator');
-  const firstOperandBonusDrop = document.querySelector('.first-operand-bonus-drop');
-  const secondOperandBonusDrop = document.querySelector('.second-operand-bonus-drop');
 
-  let firstValue;
-  let secondValue;
-  let firstBonusValue;
-  let secondBonusValue;
-  let operatorSymbol = operator.textContent;
+  let index = resultArray.indexOf(Number(enteredAnswer));
 
-  try {
-    firstValue = Number(firstOperandDrop.textContent);
-    secondValue = Number(secondOperandDrop.textContent);
-  } catch (error) {}
-  try {
-    firstBonusValue = Number(firstOperandBonusDrop.textContent);
-    secondBonusValue = Number(secondOperandBonusDrop.textContent);
-  } catch (error) {}
-
-  switch (operatorSymbol) {
-    case '+':
-      correctAnswer = firstValue + secondValue;
-      correctBonusAnswer = firstBonusValue + secondBonusValue;
-      break;
-    case '-':
-      correctAnswer = firstValue - secondValue;
-      correctBonusAnswer = firstBonusValue - secondBonusValue;
-      break;
-    case '×':
-      correctAnswer = firstValue * secondValue;
-      correctBonusAnswer = firstBonusValue * secondBonusValue;
-      break;
-    case '÷':
-      correctAnswer = firstValue / secondValue;
-      correctBonusAnswer = firstBonusValue / secondBonusValue;
-      break;
-  }
-
-  isCorrectAnswer = enteredAnswer == correctAnswer;
-  isCorrectBonusAnswer = enteredAnswer == correctBonusAnswer;
-
-  if (isCorrectBonusAnswer) {
-    playSplashAnimation('bonus-drop', 'bonus-drop-splash');
-    gameField.removeChild(bonusDrop);
-    allDrops.forEach((allDrops) => {
-      playSplashAnimation('drop', 'drop-splash');
-      gameField.removeChild(allDrops);
-    });
+  if (index !== -1) {
+    if (dropsArray[index].classList.contains('bonus-drop')) {
+      isCorrectBonusAnswer = true;
+      changeScore();
+      playSplashAnimation(index, 'bonus-drop', 'bonus-drop-splash');
+      for (let i = 0; i < dropsArray.length; i++) {
+        playSplashAnimation(i, 'drop', 'drop-splash');
+      }
+      gameField.removeChild(bonusDrop);
+      allDrops.forEach((allDrops) => {
+        gameField.removeChild(allDrops);
+      });
+      dropsArray.splice(0, dropsArray.length);
+      resultArray.splice(0, resultArray.length);
+    } else if (dropsArray[index].classList.contains('drop')) {
+      isCorrectAnswer = true;
+      changeScore();
+      playSplashAnimation(index, 'drop', 'drop-splash');
+      dropsArray[index].remove();
+      resultArray.splice(index, 1);
+      dropsArray.splice(index, 1);
+    }
+  } else {
     changeScore();
-    return;
-  } else if (isCorrectAnswer) {
-    playSplashAnimation('drop', 'drop-splash');
-    gameField.removeChild(drop);
   }
-  changeScore();
+
+  isCorrectBonusAnswer = false;
+  isCorrectAnswer = false;
 }
 
 // Функция для обновления значения на дисплее
@@ -349,7 +338,6 @@ function useNumpad(event) {
         break;
     }
   }
-
   switch (event.code) {
     case 'Backspace':
       clearDisplay();
@@ -377,34 +365,49 @@ function setRandomDropPosition(
 
 // Функция для установки случайного значения оператора
 function setRandomOperandValue() {
-  let minValue;
-  let maxValue;
+  let min;
+  let max;
 
   if (countCorrectAnswer >= 0 && countCorrectAnswer < 50) {
-    minValue = limitOperandValue.level1.min;
-    maxValue = limitOperandValue.level1.max;
+    min = limitOperandValue.level1.min;
+    max = limitOperandValue.level1.max;
   } else if (countCorrectAnswer >= 50 && countCorrectAnswer < 100) {
-    minValue = limitOperandValue.level2.min;
-    maxValue = limitOperandValue.level2.max;
+    min = limitOperandValue.level2.min;
+    max = limitOperandValue.level2.max;
   } else if (countCorrectAnswer >= 100 && countCorrectAnswer < 150) {
-    minValue = limitOperandValue.level3.min;
-    maxValue = limitOperandValue.level3.max;
+    min = limitOperandValue.level3.min;
+    max = limitOperandValue.level3.max;
   } else if (countCorrectAnswer >= 150 && countCorrectAnswer < 200) {
-    minValue = limitOperandValue.level4.min;
-    maxValue = limitOperandValue.level4.max;
+    min = limitOperandValue.level4.min;
+    max = limitOperandValue.level4.max;
   } else {
-    minValue = limitOperandValue.level5.min;
-    maxValue = limitOperandValue.level5.max;
+    min = limitOperandValue.level5.min;
+    max = limitOperandValue.level5.max;
   }
 
-  return getRandomValue(minValue, maxValue);
+  return getRandomValue(min, max);
+}
+
+// Функция для получения результата вычисления
+function getResult(firstOperand, operator, secondOperand) {
+  switch (operator) {
+    case '+':
+      return firstOperand + secondOperand;
+    case '-':
+      return firstOperand - secondOperand;
+    case '×':
+      return firstOperand * secondOperand;
+    case '÷':
+      return firstOperand / secondOperand;
+  }
 }
 
 // Функция для установки операндов и оператора в зависимости от значений операндов
 function setOperandsAndOperator() {
-  const arrayValues = [];
-  let firstOperand = setRandomOperandValue();
-  let secondOperand = setRandomOperandValue();
+  const firstOperand = setRandomOperandValue();
+  const secondOperand = setRandomOperandValue();
+
+  let arrayValues = [];
   let operatorSymbol;
 
   if (firstOperand > secondOperand) {
@@ -426,10 +429,12 @@ function setOperandsAndOperator() {
   arrayValues.push(firstOperand);
   arrayValues.push(operatorSymbol);
   arrayValues.push(secondOperand);
+  resultArray.push(getResult(firstOperand, operatorSymbol, secondOperand));
 
   return arrayValues;
 }
 
+// Функция для установки рандомного времени создания бонусных капель
 function setRandomTimeCreateBonusDrop(
   min = creationBonusDropInterval.min,
   max = creationBonusDropInterval.max
@@ -440,6 +445,7 @@ function setRandomTimeCreateBonusDrop(
 // Функция для заполнения капли операндами и оператором
 function fillDropValues(firstOperand, operator, secondOperand) {
   const values = setOperandsAndOperator();
+
   let firstValue = values[0];
   let operatorSymbol = values[1];
   let secondValue = values[2];
@@ -485,23 +491,41 @@ function animationFallDrop(dropElement) {
 }
 
 // Функция для создания брызг
-function createSplash(elementName, splashName) {
-  const thisElementName = document.querySelector(`.${elementName}`);
+function createSplash(index, elementName, splashName) {
   const thisSplashName = splashName;
+  const offsetTopСorrection = 50;
+  const offsetLeftСorrection = 10;
+  const imageSplash = new Image(80, 80);
 
-  let offsetTopСorrection = 50;
-  let offsetLeftСorrection = 10;
-  let imageSplash = new Image(80, 80);
+  let thisElementName;
+  let thisItem;
 
   imageSplash.src = `/raindrops/assets/images/svg/${thisSplashName}.svg`;
   imageSplash.className = `${thisSplashName}`;
-  imageSplash.style.top = `${
-    thisElementName.offsetTop + offsetTopСorrection
-  }px`;
-  imageSplash.style.left = `${
-    thisElementName.offsetLeft + offsetLeftСorrection
-  }px`;
-  gameField.append(imageSplash);
+
+  try {
+    if (elementName === 'drop') {
+      thisElementName = document.querySelectorAll(`.${elementName}`);
+      thisItem = thisElementName[index];
+      imageSplash.style.top = `${thisItem.offsetTop + offsetTopСorrection}px`;
+      imageSplash.style.left = `${
+        thisItem.offsetLeft + offsetLeftСorrection
+      }px`;
+      gameField.append(imageSplash);
+    }
+  } catch (error) {}
+  try {
+    if (elementName === 'bonus-drop') {
+      thisElementName = document.querySelector(`.${elementName}`);
+      imageSplash.style.top = `${
+        thisElementName.offsetTop + offsetTopСorrection
+      }px`;
+      imageSplash.style.left = `${
+        thisElementName.offsetLeft + offsetLeftСorrection
+      }px`;
+      gameField.append(imageSplash);
+    }
+  } catch (error) {}
 }
 
 // Функция для проверки касания волны
@@ -564,7 +588,7 @@ function checkTouchToWave() {
   }, updateFrequency);
 }
 
-// Функция для создания элемента капли в зависимости от получаемого имени
+// Функция для создания элемента капли в зависимости от принимаемого имени
 function create(ElementName) {
   const thisName = ElementName;
   const dropElement = document.createElement('div');
@@ -580,6 +604,7 @@ function create(ElementName) {
   dropElement.append(firstOperand, operator, secondOperand);
   fillDropValues(firstOperand, operator, secondOperand);
   gameField.append(dropElement);
+  dropsArray.push(dropElement);
   animationFallDrop(dropElement);
   checkTouchToWave();
 
@@ -610,6 +635,9 @@ function startGame() {
   currentScore = 0; // Устанавливаем значение текущего рейтинга равным нулю
   create('drop'); // Запускаем создание капель
   setTimeout(() => {
+    if (isGameOver) {
+      return;
+    }
     create('bonus-drop'); // Запускаем создание бонусных капель
   }, setRandomTimeCreateBonusDrop());
 }
@@ -636,6 +664,15 @@ soundButton.addEventListener('click', () => {
   } else {
     pauseSound();
     soundButton.classList.toggle('sound-off');
+  }
+});
+
+// Включаем полноэкранный режим при нажатии на соответствующую кнопку
+fullscreenButton.addEventListener('click', () => {
+  if (document.fullscreenElement) {
+    document.exitFullscreen();
+  } else {
+    gameContainer.requestFullscreen();
   }
 });
 
