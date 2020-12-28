@@ -24,13 +24,13 @@ const totalEquations = document.querySelector('.total-equations');
 const equationsPerMinute = document.querySelector('.equations-per-minute');
 const overall = document.querySelector('.overall');
 
-// Минимальное и максимальное значение для случайного положения капли
+// Minimum and maximum values for random drop position
 const limitPositionValue = {
   min: 1,
   max: 85,
 };
 
-// Минимальное и максимальное значение операнда в зависимости от уровня
+// Minimum and maximum operand value depending on the level
 const limitOperandValue = {
   level1: {
     min: 1,
@@ -54,31 +54,31 @@ const limitOperandValue = {
   },
 };
 
-// Максимальное и минимальное значение для интервала создания бонусных капель
+// Maximum and minimum value for the interval of bonus drops creation
 const creationBonusDropInterval = {
   min: 34365,
   max: 62735,
 };
 
-let resultArray = []; // Массив для хранения результатов вычисления капель
-let dropsArray = []; // Массив для хранения списка элементов капель
-let durationAnimate = 20000; // Продолжительность анимации
-let creationDropInterval = 6000; // Интервал создания капель
-let currentScore = 0; // Текущее значение рейтинга
-let baseChangeScore = 10; // Базовая величина изменения рейтинга
-let countCorrectAnswer = 0; // Подсчёт правильных ответов
-let countDrop = 1; // Подсчёт созданных капель
-let countDropFallen = 0; // Подсчёт упавших в море капель
-let healthPoints = 3; // Количество очков здоровья
-let enteredAnswer; // Введённый ответ
-let correctAnswer; // Правильный ответ
-let correctBonusAnswer; // Правильный бонусный ответ
-let isSoundOn = true; // Флаг для определения, должны ли проигрываться фоновые звуки
-let isCorrectAnswer; // Флаг для определения корректности ответа
-let isCorrectBonusAnswer; // Флаг для определения корректности бонусного ответа
-let isGameOver = false; // Флаг для определения завершения игры
+let resultArray = []; // Array for storing the results of calculation of drops
+let dropsArray = []; // Array for storing the list of drop items
+let durationAnimate = 20000; // Animation duration
+let creationDropInterval = 6000; // Drop creation interval
+let currentScore = 0; // Current score value
+let baseChangeScore = 10; // The base value of the score change
+let countCorrectAnswer = 0; // Counting correct answers
+let countDrop = 1; // Counting the created drops
+let countDropFallen = 0; // Counting the drops that have fallen into the sea
+let healthPoints = 3; // Amount of health points
+let enteredAnswer; // Entered answer
+let correctAnswer; // Correct answer
+let correctBonusAnswer; // Correct bonus answer
+let isSoundOn = true; // Flag to determine whether background sounds are to be played
+let isCorrectAnswer; // Flag to determine the correctness of the answer
+let isCorrectBonusAnswer; // Flag to determine the correctness of the bonus answer
+let isGameOver = false; // Flag to determine the end of the game
 
-// Функция для изменения скорости падения капли
+// Function for changing the fall speed of the raindrop
 function changeDropFallSpeed() {
   durationAnimate -= 250;
   creationDropInterval -= 70;
@@ -91,7 +91,7 @@ function changeDropFallSpeed() {
   }
 }
 
-// Функция для изменения рейтинга
+// Function to change the score
 function changeScore() {
   const countDropsOnWindow = document.querySelectorAll('.drop').length;
 
@@ -138,7 +138,7 @@ function changeScore() {
   }
 }
 
-// Функция для запуска анимации брызг
+// Function for running the splash animation
 function playSplashAnimation(index, elementName, splashName) {
   const timeShowDropSplash = 450;
 
@@ -152,7 +152,7 @@ function playSplashAnimation(index, elementName, splashName) {
   }, timeShowDropSplash);
 }
 
-// Функция для получения лучшего рейтинга
+// Function to get a best score
 function getBestScore() {
   if (localStorage.getItem('best-score') === null) {
     bestScoreBoard.textContent = 0;
@@ -161,14 +161,14 @@ function getBestScore() {
   }
 }
 
-// Функция для установки лучшего рейтинга
+// Function to set the best score
 function setBestScore() {
   if (currentScore > Number(localStorage.getItem('best-score'))) {
     localStorage.setItem('best-score', currentScore);
   }
 }
 
-// Функция для проверки введённого ответа
+// Function for checking the entered answer
 function checkAnswer() {
   const allDrops = document.querySelectorAll('.drop');
   const bonusDrop = document.querySelector('.bonus-drop');
@@ -205,7 +205,7 @@ function checkAnswer() {
   isCorrectAnswer = false;
 }
 
-// Функция для обновления значения на дисплее
+// Function to update the value on the display
 function updateDisplay(number) {
   if (display.value.length < 4) {
     if (display.value == 0) {
@@ -216,17 +216,17 @@ function updateDisplay(number) {
   }
 }
 
-// Функция для очистки дисплея
+// Function for cleaning the display
 function clearDisplay() {
   display.value = '';
 }
 
-// Функция для удаления последней цифры на дисплее
+// Function for deleting the last digit on the display
 function deleteDigit() {
   display.value = display.value.slice(0, display.value.length - 1);
 }
 
-// Функция для сохранения значения введённого результата
+// Function for saving the value of the entered answer
 function enterAnswer() {
   if (display.value !== '') {
     enteredAnswer = display.value;
@@ -235,7 +235,7 @@ function enterAnswer() {
   }
 }
 
-// Функция для ввода и обработки операций
+// Function for entering and processing operations
 function enterOperation(operation) {
   switch (operation) {
     case 'clear':
@@ -250,7 +250,7 @@ function enterOperation(operation) {
   }
 }
 
-// Вешаем событие на обёртку клавиатуры и узнаём, на какую именно кнопку нажали
+// Hang the event on the keyboard wrapper and find out which button was pressed
 keyboard.onclick = function (event) {
   let number = event.target.getAttribute('data-number');
   let operation = event.target.getAttribute('data-operation');
@@ -262,7 +262,7 @@ keyboard.onclick = function (event) {
   }
 };
 
-// Функция для использования цифрового блока на физической клавиатуре
+// Function for using the number block on the physical keyboard
 function useNumpad(event) {
   if (display.value.length < 4) {
     switch (event.code) {
@@ -350,12 +350,12 @@ function useNumpad(event) {
   }
 }
 
-// Функция для получения рандомного значения с учётом принимаемого диапазона
+// Function for getting a random value, taking into account the received range
 function getRandomValue(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-// Функция для появления капли из случайного места по горизонтали
+// Function for the appearance of a drop from a random location horizontally
 function setRandomDropPosition(
   min = limitPositionValue.min,
   max = limitPositionValue.max
@@ -363,7 +363,7 @@ function setRandomDropPosition(
   return getRandomValue(min, max);
 }
 
-// Функция для установки случайного значения оператора
+// Function for setting a random operator value
 function setRandomOperandValue() {
   let min;
   let max;
@@ -388,7 +388,7 @@ function setRandomOperandValue() {
   return getRandomValue(min, max);
 }
 
-// Функция для получения результата вычисления
+// Function for getting the result of the calculation
 function getResult(firstOperand, operator, secondOperand) {
   switch (operator) {
     case '+':
@@ -402,7 +402,7 @@ function getResult(firstOperand, operator, secondOperand) {
   }
 }
 
-// Функция для установки операндов и оператора в зависимости от значений операндов
+// Function for setting operands and operator depending on operand values
 function setOperandsAndOperator() {
   const firstOperand = setRandomOperandValue();
   const secondOperand = setRandomOperandValue();
@@ -434,7 +434,7 @@ function setOperandsAndOperator() {
   return arrayValues;
 }
 
-// Функция для установки рандомного времени создания бонусных капель
+// Function for setting random creation time of bonus drops
 function setRandomTimeCreateBonusDrop(
   min = creationBonusDropInterval.min,
   max = creationBonusDropInterval.max
@@ -442,7 +442,7 @@ function setRandomTimeCreateBonusDrop(
   return getRandomValue(min, max);
 }
 
-// Функция для заполнения капли операндами и оператором
+// Function for filling a drop with operands and operator
 function fillDropValues(firstOperand, operator, secondOperand) {
   const values = setOperandsAndOperator();
 
@@ -455,7 +455,7 @@ function fillDropValues(firstOperand, operator, secondOperand) {
   secondOperand.innerHTML = secondValue;
 }
 
-// Функция для подсчёта и показа игровой статистики
+// Function for calculating and displaying game statistics
 function showGameStatistics() {
   const convertMsToMin = 60000;
   const convertToPercent = 100;
@@ -475,7 +475,7 @@ function showGameStatistics() {
   setBestScore();
 }
 
-// Функция для анимации падения капли
+// Function for animating the fall of a raindrop
 function animationFallDrop(dropElement) {
   dropElement.animate(
     [
@@ -490,7 +490,7 @@ function animationFallDrop(dropElement) {
   );
 }
 
-// Функция для создания брызг
+// Function for creating a splash
 function createSplash(index, elementName, splashName) {
   const thisSplashName = splashName;
   const offsetTopСorrection = 50;
@@ -528,11 +528,11 @@ function createSplash(index, elementName, splashName) {
   } catch (error) {}
 }
 
-// Функция для проверки касания волны
+// Function for checking the wave touch
 function checkTouchToWave() {
   const drop = document.querySelector('.drop');
   const bonusDrop = document.querySelector('.bonus-drop');
-  const liftingHeight = 50; // Высота подъёма воды
+  const liftWaveCoefficient = 0.25; // Коэффициент подъёма волны
   const updateFrequency = 500; // Частота обновления координат
   const delayShowStatistics = 500; // Задержка перед отображением статистики
 
@@ -559,8 +559,12 @@ function checkTouchToWave() {
     bonusDropCoordinateY >= waveCoordinateY
   ) {
     countDropFallen++;
-    wave.style.height = `${wave.offsetHeight + liftingHeight}px`;
-    wave2.style.height = `${wave2.offsetHeight + liftingHeight}px`;
+    wave.style.height = `${
+      wave.offsetHeight + wave.offsetHeight * liftWaveCoefficient
+    }px`;
+    wave2.style.height = `${
+      wave2.offsetHeight + wave2.offsetHeight * liftWaveCoefficient
+    }px`;
     fallInSeaSound.currentTime = 0;
     fallInSeaSound.play();
     if (countDropFallen >= healthPoints) {
@@ -588,7 +592,7 @@ function checkTouchToWave() {
   }, updateFrequency);
 }
 
-// Функция для создания элемента капли в зависимости от принимаемого имени
+// Function for creating a drop item depending on the received name
 function create(ElementName) {
   const thisName = ElementName;
   const dropElement = document.createElement('div');
@@ -628,33 +632,33 @@ function create(ElementName) {
   }
 }
 
-// Функция для запуска игры
+// Function to start the game
 function startGame() {
-  playSound(); // Включаем фоновый звук
-  getBestScore(); // Получаем лучший результат перед стартом
-  currentScore = 0; // Устанавливаем значение текущего рейтинга равным нулю
-  create('drop'); // Запускаем создание капель
+  playSound(); // Turning on the background sound
+  getBestScore(); // Getting the best score before the start
+  currentScore = 0; // Set the value of the current rating to zero
+  create('drop'); // Starting the creation of raindrops
   setTimeout(() => {
     if (isGameOver) {
       return;
     }
-    create('bonus-drop'); // Запускаем создание бонусных капель
+    create('bonus-drop'); // Starting the creation of bonus raindrops
   }, setRandomTimeCreateBonusDrop());
 }
 
-// Функция для запуска проигрывания фоновых звуков
+// Function to start playing background sounds
 function playSound() {
   rainSound.play();
   seaSound.play();
 }
 
-// Функция для остановки проигрывания фоновых звуков
+// Function for stopping the playback of background sounds
 function pauseSound() {
   rainSound.pause();
   seaSound.pause();
 }
 
-// Вешаем на кнопку звука обработчик события
+// Hang an event handler on the sound button
 soundButton.addEventListener('click', () => {
   isSoundOn = !isSoundOn;
 
@@ -667,7 +671,7 @@ soundButton.addEventListener('click', () => {
   }
 });
 
-// Включаем полноэкранный режим при нажатии на соответствующую кнопку
+// Enable fullscreen mode by pressing the corresponding button
 fullscreenButton.addEventListener('click', () => {
   if (document.fullscreenElement) {
     document.exitFullscreen();
@@ -676,7 +680,7 @@ fullscreenButton.addEventListener('click', () => {
   }
 });
 
-// Слушаем нажатие на физическую клавиатуру
+// Listening to the press of the physical keyboard
 window.addEventListener('keydown', useNumpad);
 
-startGame(); // Запуск игры
+startGame(); // Running the game
