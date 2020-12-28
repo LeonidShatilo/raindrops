@@ -68,7 +68,8 @@ body {
   flex-direction: column;
   align-items: center;
   width: 90%;
-  height: 45%;
+  height: 55%;
+  min-height: 300px;
   max-height: 370px;
   background: #e7dfc2;
   border: 2px solid #f0ead5;
@@ -276,7 +277,7 @@ body {
 .drop,
 .bonus-drop {
   position: absolute;
-  top: -20%;
+  top: -50%;
   left: 0;
   display: flex;
   flex-direction: column;
@@ -429,4 +430,318 @@ body {
 .reload:hover {
   background: #28d978;
   border: 3px solid #009644;
+}
+
+/* MEDIA QUERIES */
+
+@media screen and (max-width: 1025px) {
+  .game-control {
+    width: 15%;
+    min-width: 250px;
+  }
+
+  .wrapper-score {
+    font-size: 1.3rem;
+  }
+
+  .wrapper-control {
+    width: 90%;
+    height: 45%;
+    max-height: 370px;
+  }
+
+  .display-input {
+    font-size: 4rem;
+  }
+
+  .number {
+    font-size: 1.6rem;
+  }
+
+  .operation {
+    font-size: 0.8rem;
+  }
+
+  .btn-control {
+    font-size: 1.2rem;
+  }
+
+  .sound {
+    right: 78%;
+  }
+
+  .fullscreen {
+    left: 78%;
+  }
+
+  .mountains {
+    width: 500px;
+    height: 286px;
+  }
+
+  .wave {
+    height: 13%;
+  }
+
+  .operator {
+    top: 46%;
+    left: 18%;
+    font-size: 1.8rem;
+  }
+
+  .drop,
+  .bonus-drop {
+    top: 35%;
+    left: 20%;
+    width: 80px;
+    height: 114px;
+    font-size: 1.2rem;
+  }
+
+  .wrong-answer,
+  .bonus-answer {
+    font-size: 4rem;
+  }
+
+  .drop-splash,
+  .bonus-drop-splash {
+    width: 50px;
+    height: 50px;
+  }
+
+  .game-statistic {
+    font-size: 1.5rem;
+  }
+
+  .title {
+    font-size: 2.3rem;
+  }
+
+  .reload {
+    font-size: 1.7rem;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .game-control {
+    width: 15%;
+    min-width: 200px;
+  }
+
+  .wrapper-score {
+    font-size: 1.2rem;
+  }
+
+  .wrapper-control {
+    width: 90%;
+    height: 35%;
+    min-width: 180px;
+    min-height: 250px;
+  }
+
+  .display-input {
+    font-size: 3rem;
+  }
+
+  .number {
+    font-size: 1.3rem;
+  }
+
+  .operation {
+    font-size: 0.7rem;
+  }
+
+  .btn-control {
+    font-size: 1rem;
+  }
+
+  .sound {
+    right: 74%;
+  }
+
+  .fullscreen {
+    left: 74%;
+  }
+
+  .mountains {
+    width: 400px;
+    height: 229px;
+  }
+
+  .wave {
+    height: 13%;
+  }
+
+  .operator {
+    top: 46%;
+    left: 18%;
+    font-size: 1.8rem;
+  }
+
+  .drop,
+  .bonus-drop {
+    top: 35%;
+    left: 20%;
+    width: 80px;
+    height: 114px;
+    font-size: 1.2rem;
+  }
+
+  .wrong-answer,
+  .bonus-answer {
+    font-size: 4rem;
+  }
+
+  .drop-splash,
+  .bonus-drop-splash {
+    width: 50px;
+    height: 50px;
+  }
+
+  .game-statistic {
+    font-size: 1.2rem;
+  }
+
+  .title {
+    font-size: 2rem;
+  }
+
+  .score-text {
+    font-size: 2.2rem;
+  }
+
+  .reload {
+    font-size: 1.4rem;
+  }
+}
+
+@media screen and (max-width: 621px) {
+  .game-container {
+    flex-direction: column;
+  }
+
+  .game-control {
+    margin: 0 auto;
+    height: 52%;
+    min-width: 100vw;
+  }
+
+  .wrapper-score {
+    position: absolute;
+    font-size: 1rem;
+    flex-direction: row;
+    height: 20px;
+    padding: 1rem;
+  }
+
+  .wrapper-score p {
+    margin-right: 25px;
+  }
+
+  .wrapper-score p:last-child {
+    margin-right: 0;
+  }
+
+  .wrapper-control {
+    position: absolute;
+    top: 10%;
+    margin-top: 0.5rem;
+    width: 10%;
+    height: 10%;
+    min-width: 230px;
+    min-height: 280px;
+  }
+
+  .operation {
+    font-size: 1rem;
+  }
+
+  .btn-control {
+    font-size: 1.2rem;
+  }
+
+  .sound {
+    display: none;
+  }
+
+  .fullscreen {
+    display: none;
+  }
+
+  .mountains {
+    width: 300px;
+    height: 165px;
+  }
+
+  .wave {
+    height: 20%;
+  }
+
+  .operator {
+    top: 46%;
+    left: 18%;
+    font-size: 1.2rem;
+  }
+
+  .drop,
+  .bonus-drop {
+    top: 35%;
+    left: 20%;
+    width: 50px;
+    height: 71px;
+    font-size: 0.9rem;
+  }
+
+  .wrong-answer,
+  .bonus-answer {
+    font-size: 3rem;
+  }
+
+  .drop-splash,
+  .bonus-drop-splash {
+    width: 35px;
+    height: 35px;
+  }
+
+  .game-statistic {
+    font-size: 1.5rem;
+  }
+
+  .game-over-text {
+    font-size: 3.5rem;
+  }
+
+  .title {
+    font-size: 1.7rem;
+  }
+
+  .score-text {
+    font-size: 2rem;
+  }
+
+  .reload {
+    font-size: 2rem;
+  }
+}
+
+@media screen and (max-width: 321px) {
+  .game-statistic {
+    font-size: 1.2rem;
+  }
+
+  .game-over-text {
+    font-size: 3rem;
+  }
+
+  .title {
+    font-size: 1.5rem;
+  }
+
+  .score-text {
+    font-size: 1.8rem;
+  }
+
+  .reload {
+    font-size: 1.8rem;
+  }
 }
