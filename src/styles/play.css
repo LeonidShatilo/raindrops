@@ -529,7 +529,9 @@ body {
   }
 
   .wrapper-score {
-    font-size: 1.2rem;
+    font-size: 1rem;
+    padding: 1.5rem 0 2rem 0;
+    height: 50px;
   }
 
   .wrapper-control {
@@ -653,19 +655,21 @@ body {
   }
 
   .operation {
-    font-size: 1rem;
+    font-size: 0.8rem;
   }
 
   .btn-control {
-    font-size: 1.2rem;
+    font-size: 1rem;
   }
 
   .sound {
-    display: none;
+    right: 84%;
+    bottom: 8%;
   }
 
   .fullscreen {
-    display: none;
+    left: 84%;
+    bottom: 8%;
   }
 
   .mountains {
