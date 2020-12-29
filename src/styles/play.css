@@ -162,7 +162,7 @@ body {
 
 .sound {
   bottom: 1%;
-  right: 80%;
+  left: 4%;
   padding: 0.5rem 0.8rem;
   color: white;
   background: #4fc383;
@@ -467,7 +467,7 @@ body {
   }
 
   .sound {
-    right: 78%;
+    left: 4%;
   }
 
   .fullscreen {
@@ -558,7 +558,7 @@ body {
   }
 
   .sound {
-    right: 74%;
+    left: 4%;
   }
 
   .fullscreen {
@@ -663,13 +663,13 @@ body {
   }
 
   .sound {
-    right: 84%;
-    bottom: 8%;
+    left: 2%;
+    bottom: 17%;
   }
 
   .fullscreen {
-    left: 84%;
-    bottom: 8%;
+    left: 2%;
+    bottom: 2%;
   }
 
   .mountains {
@@ -728,7 +728,7 @@ body {
   }
 }
 
-@media screen and (max-width: 321px) {
+@media screen and (max-width: 350px) {
   .game-statistic {
     font-size: 1.2rem;
   }
@@ -747,5 +747,27 @@ body {
 
   .reload {
     font-size: 1.8rem;
+  }
+
+  .wrapper-control {
+    top: 10%;
+    left: 22%;
+  }
+
+  .btn-control {
+    font-size: 1rem;
+    border-radius: 0.5rem;
+  }
+
+  .sound {
+    left: 4%;
+    bottom: 20%;
+    padding: 0.4rem 0.7rem;
+  }
+
+  .fullscreen {
+    left: 4%;
+    bottom: 6%;
+    padding: 0.3rem 0.6rem;
   }
 }
