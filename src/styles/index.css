@@ -4,7 +4,7 @@
   box-sizing: border-box;
 }
 
-.body {
+body {
   font-size: 10px;
   font-family: 'Fredoka One', cursive;
 }
@@ -19,14 +19,17 @@
 }
 
 .wrapper-info {
-  max-width: 1024px;
-  height: 25vh;
+  position: relative;
+  top: 0;
   margin: 0 auto;
+  margin-bottom: 1rem;
+  max-width: 1024px;
+  max-height: 200px;
 }
 
 h1 {
   padding: 1rem 3rem 0.5rem;
-  font-size: 7em;
+  font-size: 7rem;
   letter-spacing: 0.2rem;
   font-family: 'Fredoka One', cursive;
   text-transform: uppercase;
@@ -41,7 +44,7 @@ h1 {
 
 h2 {
   padding: 0 3rem 0;
-  font-size: 1.5em;
+  font-size: 1.5rem;
   font-family: 'Lato', sans-serif;
   color: #5b96be;
   user-select: none;
@@ -50,31 +53,45 @@ h2 {
 .wrapper-drops {
   position: relative;
   max-width: 1020px;
-  min-height: 60vh;
+  height: 50vh;
   margin: 0 auto;
 }
 
-.drop-left {
+.drop-left,
+.drop-right {
   position: absolute;
-  width: 7vw;
-  height: 22vh;
-  top: 5%;
-  left: 25%;
+  width: 8%;
+  height: 30%;
+  min-width: 80px;
+  min-height: 120px;
   background-size: 100%;
   background-repeat: no-repeat;
-  background-position: center;
   background-image: url('/raindrops/assets/images/png/drop.png');
+  pointer-events: none;
+}
+
+.drop-left {
+  top: 7%;
+  right: 67%;
   opacity: 0.8;
   z-index: 2;
-  pointer-events: none;
+}
+
+.drop-right {
+  top: 30%;
+  right: 22%;
+  opacity: 0.6;
+  z-index: 1;
 }
 
 .drop-center {
   position: absolute;
-  width: 19vw;
-  height: 60vh;
-  top: 0%;
-  left: 35%;
+  width: 28%;
+  height: 100%;
+  min-width: 300px;
+  min-height: 450px;
+  top: 10%;
+  right: 35%;
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center;
@@ -83,36 +100,26 @@ h2 {
   pointer-events: none;
 }
 
-.drop-right {
-  position: absolute;
-  width: 5vw;
-  height: 15vh;
-  top: 30%;
-  left: 67%;
-  background-size: 100%;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-image: url('/raindrops/assets/images/png/drop.png');
-  opacity: 0.6;
-  z-index: 1;
-  pointer-events: none;
-}
-
 .wrapper-button {
+  position: absolute;
+  margin-left: auto;
+  margin-right: auto;
+  left: 0;
+  right: 0;
+  bottom: 2%;
+  text-align: center;
   max-width: 1024px;
-  min-height: 15vh;
   margin: 0 auto;
+  z-index: 10;
 }
 
 button {
-  max-width: 25%;
-  max-height: 5%;
   padding: 1rem;
   margin: 1rem 0.5rem;
   border: 4px solid #5b96be;
   border-radius: 10px;
   font-family: 'Fredoka One', cursive;
-  font-size: 2em;
+  font-size: 2rem;
   color: #5b96be;
   background: none;
   outline: none;
@@ -133,22 +140,176 @@ button {
   border: 4px solid #c30000;
 }
 
-#fullscreen {
-  position: absolute;
-  padding: 0.2rem 1rem;
-  max-width: 10%;
-  max-height: 10%;
-  right: 2%;
-  font-size: 3em;
-  font-weight: bold;
-}
-
-#fullscreen:hover {
-  color: white;
-  background: #96adca;
-  border: 4px solid #758faf;
-}
-
 button:active {
   transform: scale(0.95);
+}
+
+/* MEDIA QUERIES */
+
+@media screen and (max-width: 750px) {
+  .wrapper-drops {
+    max-width: 750px;
+  }
+
+  h1 {
+    font-size: 5rem;
+  }
+
+  h2 {
+    font-size: 1.3rem;
+  }
+
+  .drop-left,
+  .drop-right {
+    min-width: 60px;
+    min-height: 90px;
+  }
+
+  .drop-center {
+    min-width: 250px;
+    min-height: 375px;
+    top: 5%;
+    right: 32%;
+  }
+
+  button {
+    font-size: 1.7rem;
+  }
+}
+
+@media screen and (max-width: 550px) {
+  .wrapper-drops {
+    max-width: 550px;
+  }
+
+  h1 {
+    font-size: 4rem;
+  }
+
+  h2 {
+    font-size: 1.2rem;
+  }
+
+  .drop-left,
+  .drop-right {
+    min-width: 60px;
+    min-height: 90px;
+  }
+
+  .drop-left {
+    right: 70%;
+  }
+  .drop-right {
+    right: 15%;
+  }
+
+  .drop-center {
+    min-width: 250px;
+    min-height: 375px;
+    right: 25%;
+  }
+
+  button {
+    font-size: 1.4rem;
+  }
+}
+
+@media screen and (max-width: 450px) {
+  .wrapper-drops {
+    max-width: 450px;
+  }
+
+  h1 {
+    padding: 1rem 1rem 0 1rem;
+    font-size: 3.3rem;
+  }
+
+  h2 {
+    padding: 0 1rem;
+    font-size: 1.5rem;
+  }
+
+  .drop-left,
+  .drop-right {
+    min-width: 40px;
+    min-height: 60px;
+  }
+
+  .drop-left {
+    top: 15%;
+    right: 67%;
+  }
+
+  .drop-right {
+    right: 20%;
+  }
+
+  .drop-center {
+    min-width: 200px;
+    min-height: 300px;
+    top: 10%;
+    right: 25%;
+  }
+
+  button {
+    font-size: 1.2rem;
+  }
+}
+
+@media screen and (max-width: 375px) {
+  .wrapper-drops {
+    max-width: 375px;
+  }
+
+  h1 {
+    font-size: 2.8rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+  }
+
+  button {
+    font-size: 1rem;
+  }
+}
+
+@media screen and (max-width: 325px) {
+  .wrapper-drops {
+    max-width: 325px;
+  }
+
+  h1 {
+    font-size: 2.7rem;
+  }
+
+  h2 {
+    font-size: 1.4rem;
+  }
+
+  .drop-left,
+  .drop-right {
+    min-width: 40px;
+    min-height: 60px;
+  }
+
+  .drop-left {
+    top: 15%;
+    right: 67%;
+  }
+
+  .drop-right {
+    right: 15%;
+  }
+
+  .drop-center {
+    min-width: 200px;
+    min-height: 300px;
+    top: 10%;
+    right: 19%;
+  }
+
+  button {
+    font-size: 1.2rem;
+  }
 }
