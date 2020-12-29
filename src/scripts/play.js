@@ -549,9 +549,13 @@ function checkTouchToWave() {
 
   if (dropCoordinateY >= waveCoordinateY) {
     gameField.removeChild(document.querySelector('.drop'));
+    resultArray.splice(0, 1);
+    dropsArray.splice(0, 1);
   }
   if (bonusDropCoordinateY >= waveCoordinateY) {
     gameField.removeChild(document.querySelector('.bonus-drop'));
+    resultArray.splice(0, 1);
+    dropsArray.splice(0, 1);
   }
 
   if (
