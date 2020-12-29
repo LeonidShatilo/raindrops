@@ -175,6 +175,9 @@ function checkAnswer() {
 
   let index = resultArray.indexOf(Number(enteredAnswer));
 
+  if (resultArray.length === 0) {
+    return;
+  }
   if (index !== -1) {
     if (dropsArray[index].classList.contains('bonus-drop')) {
       isCorrectBonusAnswer = true;
