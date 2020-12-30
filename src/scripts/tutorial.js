@@ -53,7 +53,7 @@ function hideGameOverBoard() {
 function checkTouchToWave() {
   const drop = document.querySelector('.drop');
   const bonusDrop = document.querySelector('.bonus-drop');
-  const liftingHeight = 50;
+  const liftWaveCoefficient = 0.25;
   const updateFrequency = 500;
   const delayShowStatistics = 500;
 
@@ -80,8 +80,12 @@ function checkTouchToWave() {
     bonusDropCoordinateY >= waveCoordinateY
   ) {
     countDropFallen++;
-    wave.style.height = `${wave.offsetHeight + liftingHeight}px`;
-    wave2.style.height = `${wave2.offsetHeight + liftingHeight}px`;
+    wave.style.height = `${
+      wave.offsetHeight + wave.offsetHeight * liftWaveCoefficient
+    }px`;
+    wave2.style.height = `${
+      wave2.offsetHeight + wave2.offsetHeight * liftWaveCoefficient
+    }px`;
     if (countDropFallen >= healthPoints) {
       setTimeout(() => {
         showGameOverBoard();
@@ -108,8 +112,16 @@ function checkTouchToWave() {
 }
 
 function downWave() {
-  wave.style.height = `${wave.offsetHeight - 150}px`;
-  wave2.style.height = `${wave2.offsetHeight - 150}px`;
+  const liftWaveCoefficient = 0.25;
+  const lowWaveCoefficient = 1.9;
+  wave.style.height = `${
+    wave.offsetHeight - wave.offsetHeight *
+    liftWaveCoefficient * lowWaveCoefficient
+  }px`;
+  wave2.style.height = `${
+    wave2.offsetHeight - wave2.offsetHeight *
+    liftWaveCoefficient * lowWaveCoefficient
+  }px`;
 }
 
 function createSplash(index, elementName, splashName) {
