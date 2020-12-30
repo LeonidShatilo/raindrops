@@ -535,9 +535,9 @@ function createSplash(index, elementName, splashName) {
 function checkTouchToWave() {
   const drop = document.querySelector('.drop');
   const bonusDrop = document.querySelector('.bonus-drop');
-  const liftWaveCoefficient = 0.25; // Коэффициент подъёма волны
-  const updateFrequency = 500; // Частота обновления координат
-  const delayShowStatistics = 500; // Задержка перед отображением статистики
+  const liftWaveCoefficient = 0.25; // Wave lift coefficient
+  const updateFrequency = 500; // Frequency of coordinate update
+  const delayShowStatistics = 500; // Delay before statistics are displayed
 
   let dropCoordinateY;
   let bonusDropCoordinateY;
