@@ -73,7 +73,7 @@ let healthPoints = 3; // Amount of health points
 let enteredAnswer; // Entered answer
 let correctAnswer; // Correct answer
 let correctBonusAnswer; // Correct bonus answer
-let isSoundOn = true; // Flag to determine whether background sounds are to be played
+let isSoundOn; // Flag to determine whether sounds are to be played
 let isCorrectAnswer; // Flag to determine the correctness of the answer
 let isCorrectBonusAnswer; // Flag to determine the correctness of the bonus answer
 let isGameOver = false; // Flag to determine the end of the game
@@ -101,13 +101,17 @@ function changeScore() {
 
   if (isCorrectAnswer || isCorrectBonusAnswer) {
     if (isCorrectAnswer) {
-      correctAnswerSound.currentTime = 0;
-      correctAnswerSound.play();
+      if (isSoundOn) {
+        correctAnswerSound.currentTime = 0;
+        correctAnswerSound.play();
+      }
       currentScore = addScore;
     }
     if (isCorrectBonusAnswer) {
-      correctBonusAnswerSound.currentTime = 0;
-      correctBonusAnswerSound.play();
+      if (isSoundOn) {
+        correctBonusAnswerSound.currentTime = 0;
+        correctBonusAnswerSound.play();
+      }
       currentScore = addScore + countDropsOnWindow * baseChangeScore;
       bonusAnswerText.innerHTML = `+${
         baseChangeScore + countCorrectAnswer +
@@ -122,8 +126,10 @@ function changeScore() {
     countCorrectAnswer++;
     changeDropFallSpeed();
   } else {
-    wrongAnswerSound.currentTime = 0;
-    wrongAnswerSound.play();
+    if (isSoundOn) {
+      wrongAnswerSound.currentTime = 0;
+      wrongAnswerSound.play();
+    }
     if (removeScore > 0) {
       currentScore = removeScore;
     } else {
@@ -143,8 +149,10 @@ function playSplashAnimation(index, elementName, splashName) {
   const timeShowDropSplash = 450;
 
   createSplash(index, elementName, splashName);
-  popDropSound.currentTime = 0;
-  popDropSound.play();
+  if (isSoundOn) {
+    popDropSound.currentTime = 0;
+    popDropSound.play();
+  }
   setTimeout(() => {
     try {
       gameField.removeChild(document.querySelector(`.${splashName}`));
@@ -486,8 +494,10 @@ function showGameStatistics() {
   scorePoints.innerHTML = currentScore;
 
   gameStatistic.classList.add('visible');
-  pauseSound();
-  gameOverSound.play();
+  if (isSoundOn) {
+    pauseSound();
+    gameOverSound.play();
+  }
   setBestScore();
 }
 
@@ -585,8 +595,10 @@ function checkTouchToWave() {
     wave2.style.height = `${
       wave2.offsetHeight + wave2.offsetHeight * liftWaveCoefficient
     }px`;
-    fallInSeaSound.currentTime = 0;
-    fallInSeaSound.play();
+    if (isSoundOn) {
+      fallInSeaSound.currentTime = 0;
+      fallInSeaSound.play();
+    }
     if (countDropFallen >= healthPoints) {
       setTimeout(() => {
         showGameStatistics();
@@ -652,11 +664,42 @@ function create(ElementName) {
   }
 }
 
+// Function for getting the status of the sound
+function getStatusSound() {
+  if (
+    localStorage.getItem('is-sound-on') === null ||
+    localStorage.getItem('is-sound-on') === true
+  ) {
+    isSoundOn = true;
+  } else {
+    isSoundOn = false;
+  }
+}
+
+// Function for setting the sound status
+function setStatusSound() {
+  localStorage.setItem('is-sound-on', isSoundOn);
+}
+
+// Function for update the sound button style
+function updateStyleSoundButton() {
+  if (isSoundOn) {
+    soundButton.classList.remove('sound-off');
+  } else {
+    soundButton.classList.add('sound-off');
+  }
+}
+
 // Function to start the game
 function startGame() {
-  playSound(); // Turning on the background sound
   getBestScore(); // Getting the best score before the start
   currentScore = 0; // Set the value of the current rating to zero
+  getStatusSound();
+  setStatusSound();
+  updateStyleSoundButton();
+  if (isSoundOn) {
+    playSound(); // Turning on the sound
+  }
   create('drop'); // Starting the creation of raindrops
   setTimeout(() => {
     if (isGameOver) {
@@ -666,13 +709,13 @@ function startGame() {
   }, setRandomTimeCreateBonusDrop());
 }
 
-// Function to start playing background sounds
+// Function to start playing sounds
 function playSound() {
   rainSound.play();
   seaSound.play();
 }
 
-// Function for stopping the playback of background sounds
+// Function for stopping the playback of sounds
 function pauseSound() {
   rainSound.pause();
   seaSound.pause();
@@ -681,6 +724,7 @@ function pauseSound() {
 // Hang an event handler on the sound button
 soundButton.addEventListener('click', () => {
   isSoundOn = !isSoundOn;
+  setStatusSound();
 
   if (isSoundOn) {
     playSound();
