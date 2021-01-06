@@ -270,6 +270,7 @@ function useNumpad(event) {
   if (display.value.length < 4) {
     switch (event.code) {
       case 'Numpad0':
+      case 'Digit0':
         if (display.value == 0) {
           display.value = 0;
         } else {
@@ -277,6 +278,7 @@ function useNumpad(event) {
         }
         break;
       case 'Numpad1':
+      case 'Digit1':
         if (display.value == 0) {
           display.value = 1;
         } else {
@@ -284,6 +286,7 @@ function useNumpad(event) {
         }
         break;
       case 'Numpad2':
+      case 'Digit2':
         if (display.value == 0) {
           display.value = 2;
         } else {
@@ -291,6 +294,7 @@ function useNumpad(event) {
         }
         break;
       case 'Numpad3':
+      case 'Digit3':
         if (display.value == 0) {
           display.value = 3;
         } else {
@@ -298,6 +302,7 @@ function useNumpad(event) {
         }
         break;
       case 'Numpad4':
+      case 'Digit4':
         if (display.value == 0) {
           display.value = 4;
         } else {
@@ -305,6 +310,7 @@ function useNumpad(event) {
         }
         break;
       case 'Numpad5':
+      case 'Digit5':
         if (display.value == 0) {
           display.value = 5;
         } else {
@@ -312,6 +318,7 @@ function useNumpad(event) {
         }
         break;
       case 'Numpad6':
+      case 'Digit6':
         if (display.value == 0) {
           display.value = 6;
         } else {
@@ -319,6 +326,7 @@ function useNumpad(event) {
         }
         break;
       case 'Numpad7':
+      case 'Digit7':
         if (display.value == 0) {
           display.value = 7;
         } else {
@@ -326,6 +334,7 @@ function useNumpad(event) {
         }
         break;
       case 'Numpad8':
+      case 'Digit8':
         if (display.value == 0) {
           display.value = 8;
         } else {
@@ -333,6 +342,7 @@ function useNumpad(event) {
         }
         break;
       case 'Numpad9':
+      case 'Digit9':
         if (display.value == 0) {
           display.value = 9;
         } else {
@@ -346,10 +356,13 @@ function useNumpad(event) {
       clearDisplay();
       break;
     case 'NumpadDecimal':
+    case 'Delete':
       deleteDigit();
       break;
     case 'NumpadEnter':
+    case 'Enter':
       enterAnswer();
+      break;
   }
 }
 
