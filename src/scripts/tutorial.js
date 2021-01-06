@@ -70,9 +70,13 @@ function checkTouchToWave() {
 
   if (dropCoordinateY >= waveCoordinateY) {
     gameField.removeChild(document.querySelector('.drop'));
+    resultArray.splice(0, 1);
+    dropsArray.splice(0, 1);
   }
   if (bonusDropCoordinateY >= waveCoordinateY) {
     gameField.removeChild(document.querySelector('.bonus-drop'));
+    resultArray.splice(0, 1);
+    dropsArray.splice(0, 1);
   }
 
   if (
@@ -296,74 +300,6 @@ function create(elementName, position, value1, symbolOperand, value2) {
   checkTouchToWave();
 }
 
-function playSceneOne() {
-  durationAnimate = 15000;
-  create('drop', 40, 2, '+', 2);
-
-  setTimeout(() => {
-    document.getElementById('4').classList.add('active');
-    display.value = 4;
-    enteredAnswer = display.value;
-  }, 2500);
-  setTimeout(() => {
-    document.getElementById('4').classList.remove('active');
-  }, 2700);
-  setTimeout(() => {
-    document.getElementById('enter').classList.add('active');
-    checkAnswer();
-    display.value = '';
-  }, 3700);
-  setTimeout(() => {
-    document.getElementById('enter').classList.remove('active');
-  }, 3900);
-}
-
-function playSceneTwo() {
-  durationAnimate = 20000;
-  create('drop', 5, 14, '-', 7);
-
-  setTimeout(() => {
-    create('drop', 45, 4, '+', 8);
-  }, 1500);
-  setTimeout(() => {
-    create('drop', 25, 28, '÷', 7);
-  }, 3000);
-  setTimeout(() => {
-    create('drop', 78, 5, '×', 5);
-  }, 4500);
-  setTimeout(() => {
-    create('bonus-drop', 60, 81, '÷', 9);
-  }, 6000);
-  setTimeout(() => {
-    document.getElementById('9').classList.add('active');
-    display.value = 9;
-    enteredAnswer = display.value;
-  }, 8000);
-  setTimeout(() => {
-    document.getElementById('9').classList.remove('active');
-  }, 8200);
-  setTimeout(() => {
-    document.getElementById('enter').classList.add('active');
-    checkAnswer();
-    display.value = '';
-  }, 10200);
-  setTimeout(() => {
-    document.getElementById('enter').classList.remove('active');
-  }, 10400);
-}
-
-function playSceneThree() {
-  durationAnimate = 8000;
-  create('drop', 10, 7, '-', 5);
-
-  setTimeout(() => {
-    create('drop', 40, 9, '÷', 3);
-  }, 1500);
-  setTimeout(() => {
-    create('drop', 70, 4, '×', 2);
-  }, 3000);
-}
-
 function chooseDescriptionText(position) {
   if (position === 1) {
     description.innerHTML = descriptionText.one;
@@ -384,24 +320,102 @@ function chooseDescriptionText(position) {
   }
 }
 
-function playTutorial() {
-  playSceneOne();
-  setTimeout(() => {
-    playSceneTwo();
-  }, 5400);
-  setTimeout(() => {
-    playSceneThree();
-  }, 18000);
+function playSceneOne() {
+  return new Promise((resolve) => {
+    durationAnimate = 15000;
+    create('drop', 40, 2, '+', 2);
 
-  setTimeout(() => {
-    isGameOver = false;
-    countDropFallen = 0;
-    currentScore = 0;
-    scoreBoard.innerHTML = '0';
-    downWave();
-    hideGameOverBoard();
-    playTutorial();
-  }, 28000);
+    setTimeout(() => {
+      document.getElementById('4').classList.add('active');
+      display.value = 4;
+      enteredAnswer = display.value;
+    }, 2500);
+    setTimeout(() => {
+      document.getElementById('4').classList.remove('active');
+    }, 2700);
+    setTimeout(() => {
+      document.getElementById('enter').classList.add('active');
+      checkAnswer();
+      display.value = '';
+    }, 3700);
+    setTimeout(() => {
+      document.getElementById('enter').classList.remove('active');
+    }, 3900);
+    setTimeout(() => {
+      resolve();
+    }, 4900);
+  });
+}
+
+function playSceneTwo() {
+  return new Promise((resolve) => {
+    durationAnimate = 20000;
+    create('drop', 5, 14, '-', 7);
+
+    setTimeout(() => {
+      create('drop', 45, 4, '+', 8);
+    }, 1500);
+    setTimeout(() => {
+      create('drop', 25, 28, '÷', 7);
+    }, 3000);
+    setTimeout(() => {
+      create('drop', 78, 5, '×', 5);
+    }, 4500);
+    setTimeout(() => {
+      create('bonus-drop', 60, 81, '÷', 9);
+    }, 6000);
+    setTimeout(() => {
+      document.getElementById('9').classList.add('active');
+      display.value = 9;
+      enteredAnswer = display.value;
+    }, 8000);
+    setTimeout(() => {
+      document.getElementById('9').classList.remove('active');
+    }, 8200);
+    setTimeout(() => {
+      document.getElementById('enter').classList.add('active');
+      checkAnswer();
+      display.value = '';
+    }, 10200);
+    setTimeout(() => {
+      document.getElementById('enter').classList.remove('active');
+    }, 10400);
+    setTimeout(() => {
+      resolve();
+    }, 11400);
+  });
+}
+
+function playSceneThree() {
+  return new Promise((resolve) => {
+    durationAnimate = 8000;
+    create('drop', 10, 7, '-', 5);
+
+    setTimeout(() => {
+      create('drop', 40, 9, '÷', 3);
+    }, 1500);
+    setTimeout(() => {
+      create('drop', 70, 4, '×', 2);
+    }, 3000);
+    setTimeout(() => {
+      resolve();
+    }, 11000);
+  });
+}
+
+function playTutorial() {
+  playSceneOne()
+    .then(() => playSceneTwo())
+    .then(() => playSceneThree())
+    .then(() => {
+      isGameOver = false;
+      countDropFallen = 0;
+      currentScore = 0;
+      scoreBoard.innerHTML = '0';
+      downWave();
+      hideGameOverBoard();
+      playTutorial();
+    });
 }
 
 backButton.addEventListener('click', () => {
