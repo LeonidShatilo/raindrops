@@ -66,7 +66,7 @@ h2 {
   min-height: 120px;
   background-size: 100%;
   background-repeat: no-repeat;
-  background-image: url('/raindrops/assets/images/png/drop.png');
+  background-image: url('../../assets/images/png/drop.png');
   pointer-events: none;
 }
 
@@ -95,7 +95,7 @@ h2 {
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center;
-  background-image: url('/raindrops/assets/images/png/main-drop.png');
+  background-image: url('../../assets/images/png/main-drop.png');
   z-index: 3;
   pointer-events: none;
 }

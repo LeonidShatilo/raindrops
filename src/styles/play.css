@@ -38,6 +38,7 @@ body {
   justify-content: center;
   align-items: center;
   background: #cbe8e5;
+  user-select: none;
 }
 
 .wrapper-score {
@@ -210,7 +211,7 @@ body {
   width: 700px;
   height: 400px;
   background-size: 100%;
-  background-image: url('/raindrops/assets/images/svg/mountains.svg');
+  background-image: url('../../assets/images/svg/mountains.svg');
   background-repeat: no-repeat;
   z-index: 1;
 }
@@ -225,7 +226,7 @@ body {
   z-index: 2;
   animation: wave 7s cubic-bezier(0.36, 0.45, 0.63, 0.53) infinite;
   transform: translate3d(0, 0, 0);
-  background-image: url('/raindrops/assets/images/svg/wave.svg');
+  background-image: url('../../assets/images/svg/wave.svg');
   background-repeat: repeat-x;
 }
 
@@ -293,11 +294,11 @@ body {
 }
 
 .drop {
-  background-image: url('/raindrops/assets/images/svg/drop.svg');
+  background-image: url('../../assets/images/svg/drop.svg');
 }
 
 .bonus-drop {
-  background-image: url('/raindrops/assets/images/svg/bonus-drop.svg');
+  background-image: url('../../assets/images/svg/bonus-drop.svg');
 }
 
 /* WRONG AND BONUS ANSWER TEXT */

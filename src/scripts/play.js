@@ -503,7 +503,7 @@ function createSplash(index, elementName, splashName) {
   let thisElementName;
   let thisItem;
 
-  imageSplash.src = `/raindrops/assets/images/svg/${thisSplashName}.svg`;
+  imageSplash.src = `../assets/images/svg/${thisSplashName}.svg`;
   imageSplash.className = `${thisSplashName}`;
 
   try {
