@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../src/styles/tutorial.css" />
+    <link
+      type="image/png"
+      sizes="32x32"
+      rel="icon"
+      href="../assets/images/png/favicon.png"
+    />
+    <title>Raindrops</title>
+  </head>
+  <body>
+    <h1 class="head-title">Instructions</h1>
+    <div class="game-container">
+      <div class="game-statistic">
+        <h1 class="game-over-text">Game over</h1>
+      </div>
+      <div class="game-field">
+        <span class="wrong-answer">-10</span>
+        <span class="bonus-answer">+10</span>
+        <div class="mountains"></div>
+        <div class="wave"></div>
+        <div class="wave wave-2"></div>
+      </div>
+      <div class="game-control">
+        <div class="wrapper-score">
+          <p>Score: <span class="score">0</span></p>
+        </div>
+        <div class="wrapper-control">
+          <div class="display">
+            <input
+              disabled
+              type="text"
+              value=""
+              id="display"
+              class="display-input"
+              maxlength="4"
+            />
+          </div>
+          <div class="wrapper-keyboard">
+            <button id="7" class="number btn">7</button>
+            <button id="8" class="number btn">8</button>
+            <button id="9" class="number btn">9</button>
+            <button id="clear" class="operation btn btn-equal">clear</button>
+            <button id="4" class="number btn">4</button>
+            <button id="5" class="number btn">5</button>
+            <button id="6" class="number btn">6</button>
+            <button id="1" class="number btn">1</button>
+            <button id="2" class="number btn">2</button>
+            <button id="3" class="number btn">3</button>
+            <button id="enter" class="operation btn btn-equal">enter</button>
+            <button id="0" class="number btn btn-long">0</button>
+            <button id="delete" class="operation btn">delete</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="instructions-container">
+      <p class="description">
+        Solve the equation in the raindrop before it reaches the water. Select
+        your answer on the number pad in the game and click
+        <span class="bold-word">Enter</span> or use your computer keyboard and
+        press the <span class="bold-word">Enter</span> key.
+        <br>
+        <br>
+        Be accurate — wrong answers reduce your score.
+      </p>
+      <div class="button-wrapper">
+        <button id="back" class="button inactive">Back</button>
+        <button id="next" class="button">Next</button>
+      </div>
+    </div>
+    <button id="play" class="play">Play</button>
+    <script src="../src/scripts/tutorial.js"></script>
+  </body>
+</html>

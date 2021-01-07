@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../src/styles/play.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      type="image/png"
+      sizes="32x32"
+      rel="icon"
+      href="../assets/images/png/favicon.png"
+    />
+    <title>Raindrops</title>
+  </head>
+  <body>
+    <div class="game-container">
+      <div class="game-statistic">
+        <h1 class="game-over-text">Game over</h1>
+        <h2 class="title">Speed</h2>
+        <p class="description">
+          Equations Per Minute: <span class="equations-per-minute"></span>
+        </p>
+        <p class="description">
+          Total Equations Solved: <span class="total-equations"></span>
+        </p>
+        <h2 class="title">Accuracy</h2>
+        <p class="description">Overall: <span class="overall"></span></p>
+        <p class="score-text"><span class="score-points"></span> points</p>
+        <button class="reload" onClick="window.location.reload()">
+          Continue
+        </button>
+      </div>
+      <div class="game-field">
+        <span class="wrong-answer">-10</span>
+        <span class="bonus-answer">+10</span>
+        <div class="mountains"></div>
+        <div class="wave"></div>
+        <div class="wave wave-2"></div>
+      </div>
+      <div class="game-control">
+        <div class="wrapper-score">
+          <p>Score: <span class="score">0</span></p>
+          <p>Best score: <span class="best-score">0</span></p>
+        </div>
+        <div class="wrapper-control">
+          <div class="display">
+            <input
+              disabled
+              type="text"
+              value=""
+              id="display"
+              class="display-input"
+              maxlength="3"
+            />
+          </div>
+          <div class="wrapper-keyboard">
+            <button data-number="7" class="number btn">7</button>
+            <button data-number="8" class="number btn">8</button>
+            <button data-number="9" class="number btn">9</button>
+            <button data-operation="clear" class="operation btn btn-equal">clear</button>
+            <button data-number="4" class="number btn">4</button>
+            <button data-number="5" class="number btn">5</button>
+            <button data-number="6" class="number btn">6</button>
+            <button data-number="1" class="number btn">1</button>
+            <button data-number="2" class="number btn">2</button>
+            <button data-number="3" class="number btn">3</button>
+            <button data-operation="enter" class="operation btn btn-equal">enter</button>
+            <button data-number="0" class="number btn btn-long">0</button>
+            <button data-operation="delete" class="operation btn">delete</button>
+          </div>
+        </div>
+        <button id="sound" class="btn-control sound">♫</button>
+        <button id="fullscreen" class="btn-control fullscreen">⛶</button>
+      </div>
+    </div>
+    <audio
+      loop
+      src="../assets/sounds/rain.mp3"
+      type="audio/mp3"
+      class="rain-sound"
+    ></audio>
+    <audio
+      loop
+      src="../assets/sounds/sea.mp3"
+      type="audio/mp3"
+      class="sea-sound"
+    ></audio>
+    <audio
+      src="../assets/sounds/correct-answer.mp3"
+      type="audio/mp3"
+      class="correct-answer-sound"
+    ></audio>
+    <audio
+      src="../assets/sounds/correct-bonus-answer.mp3"
+      type="audio/mp3"
+      class="correct-bonus-answer-sound"
+    ></audio>
+    <audio
+      src="../assets/sounds/wrong-answer.mp3"
+      type="audio/mp3"
+      class="wrong-answer-sound"
+    ></audio>
+    <audio
+      src="../assets/sounds/fall-in-sea.mp3"
+      type="audio/mp3"
+      class="fall-in-sea-sound"
+    ></audio>
+    <audio
+      src="../assets/sounds/pop-drop.mp3"
+      type="audio/mp3"
+      class="pop-drop-sound"
+    ></audio>
+    <audio
+      src="../assets/sounds/game-over.mp3"
+      type="audio/mp3"
+      class="game-over-sound"
+    ></audio>
+    <script src="../src/scripts/play.js"></script>
+  </body>
+</html>
