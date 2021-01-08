@@ -668,7 +668,8 @@ function create(ElementName) {
 function getStatusSound() {
   if (
     localStorage.getItem('is-sound-on') === null ||
-    localStorage.getItem('is-sound-on') === true
+    localStorage.getItem('is-sound-on') === 'undefined' ||
+    localStorage.getItem('is-sound-on') === 'true'
   ) {
     isSoundOn = true;
   } else {
