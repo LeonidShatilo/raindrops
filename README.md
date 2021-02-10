@@ -2,7 +2,7 @@
 
 **[Task](https://github.com/rolling-scopes-school/tasks/blob/master/tasks/stage-0/raindrops.md)**
 
-**[Result](https://leonidshatilo.github.io/raindrops/)**
+**[DEMO](https://leonidshatilo.github.io/raindrops/)**
 
 ---
 
