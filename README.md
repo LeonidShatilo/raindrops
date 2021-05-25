@@ -1,10 +1,7 @@
 # raindrops
 
-**[Task](https://github.com/rolling-scopes-school/tasks/blob/master/tasks/stage-0/raindrops.md)**
-
-**[DEMO](https://leonidshatilo.github.io/raindrops/)**
-
----
+[![TASK](https://img.shields.io/badge/-TASK-green?style=flat)](https://github.com/rolling-scopes-school/tasks/blob/master/tasks/stage-0/raindrops.md)
+[![DEMO](https://img.shields.io/badge/-DEMO-blue?style=flat)](https://leonidshatilo.github.io/raindrops/)
 
 **Description**
 
